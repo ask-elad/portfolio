@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CONFIG } from '@/lib/data/config';
 import { SoundType } from '@/hooks/useSound';
+import { prefetch } from '@/lib/dataCache';
 
 const NAV = [
   { label: 'About',      section: 'about' },
@@ -32,6 +33,21 @@ export function Navbar({ onCmd, playSound }: Props) {
     return () => { clearInterval(t); window.removeEventListener('scroll', s); };
   }, []);
 
+  // Navbar is mounted on every page, so this fires as soon as someone lands
+  // anywhere on the site — by the time they actually click into GitHub/CP,
+  // the data is already loaded (or close to it) instead of starting cold.
+  useEffect(() => {
+    if (CONFIG.social.github && !CONFIG.social.github.startsWith('REPLACE')) {
+      prefetch(`/api/github?username=${CONFIG.social.github}`);
+    }
+    if (CONFIG.social.leetcode && !CONFIG.social.leetcode.startsWith('REPLACE')) {
+      prefetch(`/api/leetcode?username=${CONFIG.social.leetcode}`);
+    }
+    if (CONFIG.social.codeforces && !CONFIG.social.codeforces.startsWith('REPLACE')) {
+      prefetch(`/api/codeforces?handle=${CONFIG.social.codeforces}`);
+    }
+  }, []);
+
   const go = (link: typeof NAV[number]) => {
     playSound('click');
     if (link.page) {
@@ -50,10 +66,10 @@ export function Navbar({ onCmd, playSound }: Props) {
 
   return (
     <nav style={{
-      position: 'fixed', top: 15, left: 0, right: 0, height: 68, zIndex: 100,
+      position: 'fixed', top: 0, left: 0, right: 0, height: 68, zIndex: 100,
       background: scrolled ? 'rgba(8,8,8,.92)' : 'rgba(8,8,8,.75)',
       backdropFilter: 'blur(16px)',
-      borderBottom: `1px solid ${scrolled ? 'rgba(34,211,238,.2)' : 'transparent'}`,
+      borderBottom: `1px solid ${scrolled ? '#1c1c20' : 'transparent'}`,
       display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', padding: '0 40px',
       transition: 'border-color .3s, background .3s',
     }}>
@@ -62,7 +78,7 @@ export function Navbar({ onCmd, playSound }: Props) {
         onMouseEnter={e => { (e.currentTarget.children[0] as HTMLElement).style.color = '#22d3ee'; playSound('hover'); }}
         onMouseLeave={e => { (e.currentTarget.children[0] as HTMLElement).style.color = '#f0f0f0'; }}
         style={{ justifySelf: 'start', cursor: 'pointer' }}>
-        <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 28, color: '#f0f0f0', transition: 'color .15s', letterSpacing: '-.01em', userSelect: 'none' }}>
+        <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 22, color: '#f0f0f0', transition: 'color .15s', letterSpacing: '-.01em', userSelect: 'none' }}>
           {CONFIG.alias}
           <span style={{ opacity: blink ? 1 : 0, color: '#22d3ee', transition: 'opacity .08s' }}>_</span>
         </span>
@@ -74,7 +90,7 @@ export function Navbar({ onCmd, playSound }: Props) {
           <button key={link.label} onClick={() => go(link)}
             onMouseEnter={e => { e.currentTarget.style.color = '#22d3ee'; playSound('hover'); }}
             onMouseLeave={e => { e.currentTarget.style.color = '#555'; }}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#e0c8c8ff', fontSize: 22, fontFamily: 'inherit', padding: '6px 15px', whiteSpace: 'nowrap', transition: 'color .15s' }}>
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555', fontSize: 15, fontFamily: 'inherit', padding: '6px 10px', whiteSpace: 'nowrap', transition: 'color .15s' }}>
             {link.label}
           </button>
         ))}
@@ -84,8 +100,8 @@ export function Navbar({ onCmd, playSound }: Props) {
       <button onClick={() => { onCmd(); playSound('open'); }}
         onMouseEnter={e => { (e.currentTarget.style as any).borderColor = 'rgba(34,211,238,.35)'; playSound('hover'); }}
         onMouseLeave={e => { (e.currentTarget.style as any).borderColor = '#2a2a2a'; }}
-        style={{ justifySelf: 'end', background: '#0e0e10', border: '1px solid #2a2a2a', borderRadius: 6, padding: '7px 22px', color: '#faf8f8ff', fontSize: 19, fontFamily: 'monospace', cursor: 'pointer', transition: 'border-color .2s' }}>
-        ⌘ K
+        style={{ justifySelf: 'end', background: '#0e0e10', border: '1px solid #2a2a2a', borderRadius: 6, padding: '7px 12px', color: '#666', fontSize: 14, fontFamily: 'monospace', cursor: 'pointer', transition: 'border-color .2s' }}>
+        ⌘K
       </button>
     </nav>
   );

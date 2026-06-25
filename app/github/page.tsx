@@ -9,6 +9,7 @@ import { CommandPalette, Command } from '@/components/features/CommandPalette';
 import { VinlandEasterEgg }       from '@/components/features/VinlandEasterEgg';
 import { SectionLabel, SubLabel } from '@/components/ui/SectionLabel';
 import { CONFIG }   from '@/lib/data/config';
+import { fetchCached } from '@/lib/dataCache';
  
 const COLORS = ['#141416', '#0c4a6e', '#0369a1', '#0ea5e9', '#22d3ee'];
  
@@ -108,8 +109,8 @@ export default function GitHubPage() {
  
   useEffect(() => {
     if (!CONFIG.social.github || CONFIG.social.github.startsWith('REPLACE')) { setLoading(false); return; }
-    fetch(`/api/github?username=${CONFIG.social.github}`)
-      .then(r => r.json()).then(setGh).catch(() => {}).finally(() => setLoading(false));
+    fetchCached(`/api/github?username=${CONFIG.social.github}`)
+      .then(setGh).catch(() => {}).finally(() => setLoading(false));
   }, []);
  
   const handleCmd = (cmd: Command) => {

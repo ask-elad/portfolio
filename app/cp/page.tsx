@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSound , SoundType } from '@/hooks/useSound';
+import { useSound, SoundType } from '@/hooks/useSound';
 import { Cursor } from '@/components/features/Cursor';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CommandPalette, Command } from '@/components/features/CommandPalette';
 import { VinlandEasterEgg } from '@/components/features/VinlandEasterEgg';
-import { SubLabel } from '@/components/ui/SectionLabel';
 import { CONFIG } from '@/lib/data/config';
+import { fetchCached } from '@/lib/dataCache';
 
 type AnyObj = Record<string, any>;
 
@@ -124,64 +124,10 @@ function ProgressRow({
   );
 }
 
-function Sparkline({
-  values,
-  stroke = '#22d3ee',
-}: {
-  values: number[];
-  stroke?: string;
-}) {
-  if (values.length === 0) {
-    return (
-      <div className="flex h-28 items-center justify-center text-xs font-mono text-white/20">
-        no contest history yet
-      </div>
-    );
-  }
-
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-
-  const points = values
-    .map((value, index) => {
-      const x = values.length === 1 ? 50 : (index / (values.length - 1)) * 100;
-      const y = 100 - ((value - min) / range) * 100;
-      return `${x},${y}`;
-    })
-    .join(' ');
-
-  return (
-    <div className="relative">
-      <svg viewBox="0 0 100 100" className="h-28 w-full overflow-visible">
-        <polyline
-          fill="none"
-          stroke={stroke}
-          strokeWidth="2.4"
-          strokeLinejoin="round"
-          strokeLinecap="round"
-          points={points}
-        />
-        {values.map((value, index) => {
-          const x = values.length === 1 ? 50 : (index / (values.length - 1)) * 100;
-          const y = 100 - ((value - min) / range) * 100;
-          return <circle key={`${value}-${index}`} cx={x} cy={y} r="1.9" fill={stroke} />;
-        })}
-      </svg>
-      <div className="mt-2 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.18em] text-white/18">
-        <span>older</span>
-        <span>recent</span>
-      </div>
-    </div>
-  );
-}
-
 function BarChart({
   items,
-  color,
 }: {
   items: Array<{ label: string; value: number }>;
-  color: string;
 }) {
   if (items.length === 0) {
     return (
@@ -198,15 +144,21 @@ function BarChart({
       {items.map((item) => {
         const pct = Math.max(2, (item.value / max) * 100);
         return (
-          <div key={item.label}>
+          <div key={item.label} className="group">
             <div className="mb-1.5 flex items-center justify-between gap-3">
               <span className="text-xs font-mono text-white/55">{item.label}</span>
               <span className="text-xs font-mono text-white/30">{formatNum(item.value)}</span>
             </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-white/6">
+            <div className="h-2 overflow-hidden rounded-full border border-white/5 bg-[#121212]">
               <div
-                className="h-full rounded-full transition-all duration-700 ease-out"
-                style={{ width: `${pct}%`, background: color }}
+                className="h-full rounded-full transition-all duration-300 ease-out group-hover:scale-y-125 group-hover:brightness-110"
+                style={{
+                  width: `${pct}%`,
+                  background:
+                    'linear-gradient(90deg, #22d3ee 0%, #3b82f6 55%, #8b5cf6 100%)',
+                  boxShadow:
+                    '0 0 8px rgba(34,211,238,.25), 0 0 20px rgba(59,130,246,.18), 0 0 28px rgba(139,92,246,.12)',
+                }}
               />
             </div>
           </div>
@@ -261,7 +213,7 @@ function LinkLine({
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLElement).style.color = '#22d3ee';
       }}
-      className="inline-flex items-center gap-2 font-mono text-xs text-#22d3ee transition-colors duration-150"
+      className="inline-flex items-center gap-2 font-mono text-xs text-[#22d3ee] transition-colors duration-150"
     >
       <span className="text-white/35">↗</span>
       {label}
@@ -291,26 +243,18 @@ export default function CPPage() {
   }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
+    let cancelled = false;
 
     async function loadData() {
       try {
         if (CONFIG.social.leetcode && !CONFIG.social.leetcode.startsWith('REPLACE')) {
-          const res = await fetch(
-            `/api/leetcode?username=${CONFIG.social.leetcode}`,
-            { signal: controller.signal }
-          );
-          const data = await res.json();
-          setLc(data);
+          const data = await fetchCached(`/api/leetcode?username=${CONFIG.social.leetcode}`);
+          if (!cancelled) setLc(data);
         }
 
         if (CONFIG.social.codeforces && !CONFIG.social.codeforces.startsWith('REPLACE')) {
-          const res = await fetch(
-            `/api/codeforces?handle=${CONFIG.social.codeforces}`,
-            { signal: controller.signal }
-          );
-          const data = await res.json();
-          setCf(data);
+          const data = await fetchCached(`/api/codeforces?handle=${CONFIG.social.codeforces}`);
+          if (!cancelled) setCf(data);
         }
       } catch {
         // ignore fetch errors for now; UI already handles missing data
@@ -319,7 +263,9 @@ export default function CPPage() {
 
     loadData();
 
-    return () => controller.abort();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleCmd = (cmd: Command) => {
@@ -355,7 +301,6 @@ export default function CPPage() {
   const lcHardTotal = lcTotals?.hard ?? 0;
 
   const lcContestRating = lcContest?.rating ?? null;
-  const lcGlobalRank = lcContest?.globalRanking ?? null;
   const lcAttended = lcContest?.attended ?? 0;
   const lcTopPercentage = lcContest?.topPercentage ?? null;
 
@@ -363,18 +308,13 @@ export default function CPPage() {
   const cfProfile = cf?.profile ?? null;
   const cfStats = cf?.stats ?? null;
   const cfContests = cf?.contests ?? null;
-  const cfHardest = cf?.hardestSolved ?? null;
   const cfLanguages = cf?.languageUsage ?? {};
   const cfBuckets = cf?.ratingBuckets ?? {};
-  const cfRecent = cf?.recentAccepted ?? [];
 
   const cfCurrent = cfProfile?.rating ?? 0;
   const cfMax = cfProfile?.maxRating ?? 0;
   const cfRank = cfProfile?.rank ?? '—';
-  const cfContestHistory = cfContests?.history ?? [];
   const cfColor = getCfColor(cfCurrent);
-
-  const cfHistoryValues = cfContestHistory.map((item: AnyObj) => item.newRating as number);
 
   const languageItems = Object.entries(cfLanguages)
     .map(([label, value]) => ({ label, value: Number(value) || 0 }))
@@ -385,8 +325,6 @@ export default function CPPage() {
     .map(([label, value]) => ({ label: `${label}`, value: Number(value) || 0 }))
     .sort((a, b) => Number(a.label) - Number(b.label))
     .slice(0, 10);
-
-  const recentAccepted = Array.isArray(cfRecent) ? cfRecent.slice(0, 5) : [];
 
   const cfSolved = cfStats?.solved ?? 0;
   const cfSubmissions = cfStats?.submissions ?? 0;
@@ -478,7 +416,9 @@ export default function CPPage() {
                     <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-white/50">
                       LeetCode
                     </div>
-                    <div className="mt-2 text-2xl font-semibold tracking-tight">Solved by difficulty</div>
+                    <div className="mt-2 text-2xl font-semibold tracking-tight">
+                      Solved by difficulty
+                    </div>
                   </div>
                   <div className="rounded-full border border-white/10 bg-white/3 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-white/30">
                     live
@@ -536,7 +476,9 @@ export default function CPPage() {
                       <div className="grid grid-cols-3 gap-3 text-xs font-mono text-white/35">
                         <div className="rounded-xl border border-white/8 bg-white/3 p-3">
                           <div className="text-white/18">Solved</div>
-                          <div className="mt-2 text-lg text-cyan-300">{formatNum(lcSolvedTotal)}</div>
+                          <div className="mt-2 text-lg text-cyan-300">
+                            {formatNum(lcSolvedTotal)}
+                          </div>
                         </div>
                         <div className="rounded-xl border border-white/8 bg-white/3 p-3">
                           <div className="text-white/18">Easy%</div>
@@ -556,7 +498,7 @@ export default function CPPage() {
                     <div className="mt-6 flex justify-end">
                       <LinkLine
                         href={`https://leetcode.com/u/${CONFIG.social.leetcode}`}
-                        label={`askelad`}
+                        label="askelad"
                         playSound={playSound}
                       />
                     </div>
@@ -572,7 +514,9 @@ export default function CPPage() {
                     <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-white/22">
                       Codeforces
                     </div>
-                    <div className="mt-2 text-2xl font-semibold tracking-tight">Rating journey</div>
+                    <div className="mt-2 text-2xl font-semibold tracking-tight">
+                      Rating journey
+                    </div>
                   </div>
                   <div className="rounded-full border border-white/10 bg-white/3 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-white/30">
                     ranked
@@ -616,7 +560,7 @@ export default function CPPage() {
                           Language usage
                         </div>
                         <div className="rounded-2xl border border-white/8 bg-black/25 p-4">
-                          <BarChart items={languageItems} color="#22d3ee" />
+                          <BarChart items={languageItems} />
                         </div>
                       </div>
 
@@ -625,13 +569,12 @@ export default function CPPage() {
                           Rating buckets
                         </div>
                         <div className="rounded-2xl border border-white/8 bg-black/25 p-4">
-                          <BarChart items={bucketItems} color={cfColor} />
+                          <BarChart items={bucketItems} />
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-6 grid gap-5 xl:grid-cols-2">
-                    </div>
+                    <div className="mt-6 grid gap-5 xl:grid-cols-2" />
 
                     <div className="mt-8 flex justify-end">
                       <LinkLine
@@ -647,7 +590,6 @@ export default function CPPage() {
           </section>
         </div>
       </main>
-
       <Footer />
     </div>
   );
