@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { cursor: none; }
+html { scroll-behavior: smooth; }
+body { background: #080808; color: #f0f0f0; }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #080808; }
+::-webkit-scrollbar-thumb { background: #1c1c20; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #22d3ee44; }
+
+/* Portfolio keyframes */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px #22d3ee; }
+  50%       { opacity: 0.3; box-shadow: 0 0 3px #22d3ee; }
+}
+@keyframes blinkEl {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(5px); }
+}
+
+/* Vinland easter egg — SVG draw animation */
+@keyframes drawStroke {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes fadeInEl {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* GitHub heatmap cell hover */
+.heatmap-cell:hover { transform: scale(1.4); }
