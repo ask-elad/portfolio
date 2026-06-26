@@ -396,7 +396,7 @@ export default function CPPage() {
               <MetricCard
                 label="Codeforces rating"
                 value={String(cfCurrent || '—')}
-                accent={cfColor}
+                accent="#df3d37ff"
                 subtext={cfRank}
               />
               <MetricCard

@@ -10,11 +10,11 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     id: 1,
-    title: "REPLACE_ME: Post title",
-    date: "REPLACE_ME: Mar 2025",
-    readTime: "REPLACE_ME: 8 min",
-    tags: ["AI", "REPLACE_ME"],
-    url: "https://REPLACE_ME.com/post-1",
+    title: "Annecdote of SOK workings",
+    date: "21 Mar 2026",
+    readTime: "3 min",
+    tags: ["OPEN SOURCE", "SOK"],
+    url: "https://blogs.kde.org/2026/03/21/season-of-kde-2026-improving-mentorship.kde.org-for-better-onboarding-of-new-contributors/",
   },
   {
     id: 2,

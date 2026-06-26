@@ -120,7 +120,7 @@ const GRAPHQL_QUERY = /* GraphQL */ `
           }
         }
       }
-      repos: repositories(first: 100, ownerAffiliations: OWNER, isFork: false, orderBy: { field: STARGAZERS, direction: DESC }) {
+      repos: repositories(first: 100, ownerAffiliations: OWNER, privacy: PUBLIC, isFork: false, orderBy: { field: STARGAZERS, direction: DESC }) {
         totalCount
         nodes {
           name
