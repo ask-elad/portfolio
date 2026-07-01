@@ -2,38 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --bg: #080808;
+  --ink: #0a0a0c;
+  --line: #1c1c20;
+  --line-soft: #14141680;
+  --accent: #22d3ee;
+  --t1: #ededed;
+  --t2: #b0b0b0;
+  --t3: #8a8a8a;
+  --t4: #5e5e63;
+  --t5: #3a3a3f;
+  --t6: #232327;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { cursor: none; }
 html { scroll-behavior: smooth; }
-body { background: #080808; color: #f0f0f0; }
+body {
+  background: var(--bg);
+  color: var(--t1);
+  font-family: var(--font-sans);
+  font-feature-settings: 'ss01', 'ss02', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 ::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: #080808; }
-::-webkit-scrollbar-thumb { background: #1c1c20; border-radius: 2px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: #22d3ee44; }
 
-/* Portfolio keyframes */
+::selection { background: rgba(34,211,238,.25); color: #fff; }
+
 @keyframes pulseGlow {
   0%, 100% { opacity: 1; box-shadow: 0 0 10px #22d3ee; }
   50%       { opacity: 0.3; box-shadow: 0 0 3px #22d3ee; }
 }
-@keyframes blinkEl {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
+@keyframes blinkEl { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @keyframes scrollBounce {
   0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(5px); }
+  50% { transform: translateY(6px); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Vinland easter egg — SVG draw animation */
-@keyframes drawStroke {
-  to { stroke-dashoffset: 0; }
-}
-@keyframes fadeInEl {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+img { display: block; max-width: 100%; }
 
-/* GitHub heatmap cell hover */
-.heatmap-cell:hover { transform: scale(1.4); }
+/* Editorial helpers */
+.serif { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.01em; }
+.mono  { font-family: var(--font-mono); }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}

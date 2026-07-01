@@ -3,9 +3,10 @@ import { useGlitch } from '@/hooks/useGlitch';
 import { useTyping } from '@/hooks/useTyping';
 import { CONFIG } from '@/lib/data/config';
 import { SoundType } from '@/hooks/useSound';
+import { T } from '@/lib/tokens';
 
 export function Hero({ playSound }: { playSound: (t: SoundType) => void }) {
-  const name = useGlitch(CONFIG.name || 'Dev.Name', 900, 250);
+  const name = useGlitch(CONFIG.name && !CONFIG.name.startsWith('REPLACE') ? CONFIG.name : 'Dev.Name', 900, 250);
   const role = useTyping(CONFIG.roles);
 
   const scroll = (id: string) => {
@@ -13,61 +14,62 @@ export function Hero({ playSound }: { playSound: (t: SoundType) => void }) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const currently = CONFIG.about.facts.find(f => f.label === 'Currently')?.value;
+
   return (
-    <section id="hero" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px 40px 60px', maxWidth: 880, margin: '0 auto', position: 'relative' }}>
+    <section id="hero" style={{ minHeight: '92vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '120px 40px 80px', maxWidth: T.col, margin: '0 auto', position: 'relative' }}>
       {/* Availability badge */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 44 }}>
-        <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#22d3ee', boxShadow: '0 0 10px #22d3ee', animation: 'pulseGlow 2s ease-in-out infinite' }} />
-        <span style={{ color: '#666', fontSize: 13, fontFamily: 'monospace' }}>Available for opportunities</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 48 }}>
+        <span style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: T.accent, boxShadow: '0 0 10px #22d3ee', animation: 'pulseGlow 2s ease-in-out infinite' }} />
+        <span style={{ color: T.t4, fontSize: 12, fontFamily: T.fMono, letterSpacing: '.04em' }}>Available for opportunities</span>
       </div>
 
-      {/* Name — glitches in on load */}
-      <h1 suppressHydrationWarning style={{ fontFamily: 'monospace', fontWeight: 800, fontSize: 'clamp(52px,9vw,100px)', color: '#f0f0f0', letterSpacing: '-.04em', lineHeight: 1, marginBottom: 20, userSelect: 'none' }}>
+      {/* Name — glitches in on load. Mono keeps the developer voice. */}
+      <h1 suppressHydrationWarning style={{ fontFamily: T.fMono, fontWeight: 700, fontSize: 'clamp(52px,9vw,104px)', color: T.t1, letterSpacing: '-.045em', lineHeight: 1, marginBottom: 22, userSelect: 'none' }}>
         {name}
       </h1>
 
       {/* Typing role */}
-      <div style={{ fontFamily: 'monospace', fontSize: 'clamp(15px,2vw,22px)', color: '#555', marginBottom: 28, minHeight: 32, display: 'flex', alignItems: 'center' }}>
-        <span style={{ color: '#2a2a2a' }}>// </span>
-        <span style={{ marginLeft: 8, color: '#b0b0b0' }}>{role}</span>
-        <span style={{ marginLeft: 2, color: '#22d3ee', animation: 'blinkEl 1s step-end infinite' }}>\u25ae</span>
+      <div style={{ fontFamily: T.fMono, fontSize: 'clamp(14px,1.6vw,18px)', color: T.t4, marginBottom: 36, minHeight: 28, display: 'flex', alignItems: 'center' }}>
+        <span style={{ color: T.t6 }}>// </span>
+        <span style={{ marginLeft: 8, color: T.t2 }}>{role}</span>
+        <span style={{ marginLeft: 3, color: T.accent, animation: 'blinkEl 1s step-end infinite' }}>{'\u25ae'}</span>
       </div>
 
-      {/* Personal tagline */}
-      <p style={{ color: '#666', fontSize: 16, lineHeight: 1.85, maxWidth: 500, marginBottom: 52 }}>
+      {/* Personal tagline — serif gives it warmth */}
+      <p style={{ fontFamily: T.fSerif, color: T.t2, fontSize: 'clamp(22px,2.6vw,30px)', lineHeight: 1.35, letterSpacing: '-.01em', maxWidth: 560, marginBottom: 48 }}>
         {CONFIG.heroTagline}
       </p>
 
-      {/* CTAs */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          <button onClick={() => scroll('projects')}
-            onMouseEnter={e => { e.currentTarget.style.background = '#22d3ee'; e.currentTarget.style.color = '#080808'; playSound('hover'); }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#22d3ee'; }}
-            style={{ padding: '11px 24px', border: '1px solid #22d3ee', background: 'transparent', color: '#22d3ee', fontFamily: 'monospace', fontSize: 14, borderRadius: 6, cursor: 'pointer', transition: 'all .18s' }}>
-            View Projects \u2192
-          </button>
-          <a href={CONFIG.resumeUrl} download
-            onClick={() => playSound('click')}
-            onMouseEnter={e => { (e.currentTarget.style as any).background = '#141416'; (e.currentTarget.style as any).color = '#b0b0b0'; playSound('hover'); }}
-            onMouseLeave={e => { (e.currentTarget.style as any).background = 'transparent'; (e.currentTarget.style as any).color = '#555'; }}
-            style={{ padding: '11px 24px', border: '1px solid #2a2a2a', background: 'transparent', color: '#555', fontFamily: 'monospace', fontSize: 14, borderRadius: 6, cursor: 'pointer', transition: 'all .18s', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
-            Resume
-          </a>
-        </div>
+      {/* CTAs — Resume is the primary action; the others are supporting */}
+      <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', alignItems: 'center', marginBottom: 14 }}>
+        <a href={CONFIG.resumeUrl} download
+          onClick={() => playSound('click')}
+          onMouseEnter={e => { e.currentTarget.style.background = '#67e8f9'; e.currentTarget.style.borderColor = '#67e8f9'; e.currentTarget.style.boxShadow = '0 0 24px rgba(34,211,238,.35)'; playSound('hover'); }}
+          onMouseLeave={e => { e.currentTarget.style.background = T.accent; e.currentTarget.style.borderColor = T.accent; e.currentTarget.style.boxShadow = '0 0 18px rgba(34,211,238,.22)'; }}
+          style={{ padding: '13px 24px', border: `1px solid ${T.accent}`, background: T.accent, color: T.bg, fontFamily: T.fMono, fontSize: 13, fontWeight: 600, borderRadius: 4, textDecoration: 'none', transition: 'all .18s', letterSpacing: '.04em', boxShadow: '0 0 18px rgba(34,211,238,.22)', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          Download resume {'\u2193'}
+        </a>
+        <button onClick={() => scroll('projects')}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = T.t3; e.currentTarget.style.color = T.t1; playSound('hover'); }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = T.line; e.currentTarget.style.color = T.t3; }}
+          style={{ padding: '12px 22px', border: `1px solid ${T.line}`, background: 'transparent', color: T.t3, fontFamily: T.fMono, fontSize: 13, borderRadius: 4, cursor: 'none', transition: 'all .18s', letterSpacing: '.02em' }}>
+          View projects {'\u2192'}
+        </button>
         <a href={`mailto:${CONFIG.email}`}
-          onMouseEnter={e => { (e.currentTarget.style as any).color = '#22d3ee'; playSound('hover'); }}
-          onMouseLeave={e => { (e.currentTarget.style as any).color = '#555'; }}
-          style={{ color: '#555', fontFamily: 'monospace', fontSize: 14, textDecoration: 'none', transition: 'color .18s', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-          Get in touch \u2192
+          onMouseEnter={e => { (e.currentTarget.style as any).color = T.t1; playSound('hover'); }}
+          onMouseLeave={e => { (e.currentTarget.style as any).color = T.t3; }}
+          style={{ color: T.t3, fontFamily: T.fMono, fontSize: 13, textDecoration: 'none', transition: 'color .18s', letterSpacing: '.02em' }}>
+          Email {'\u2197'}
         </a>
       </div>
 
-      {/* Scroll hint */}
-      <div style={{ position: 'absolute', bottom: 36, left: 40, color: '#252525', fontSize: 11, fontFamily: 'monospace', display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ animation: 'scrollBounce 2s ease-in-out infinite' }}>\u2193</span>
-        <span>scroll</span>
-      </div>
+      {currently && !currently.startsWith('REPLACE') && (
+        <div style={{ marginTop: 56, color: T.t4, fontFamily: T.fMono, fontSize: 12, display: 'flex', gap: 10, alignItems: 'baseline' }}>
+          <span style={{ color: T.t5, letterSpacing: '.16em', textTransform: 'uppercase', fontSize: 10 }}>Currently</span>
+          <span style={{ color: T.t2, fontFamily: T.fSans }}>{currently}</span>
+        </div>
+      )}
     </section>
   );
 }

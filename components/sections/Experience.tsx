@@ -1,48 +1,42 @@
 'use client';
 import { EXPERIENCE } from '@/lib/data/experience';
 import { SectionLabel } from '@/components/ui/SectionLabel';
+import { T } from '@/lib/tokens';
 
 export function Experience() {
   return (
-    <section id="experience" style={{ padding: '100px 40px', maxWidth: 880, margin: '0 auto' }}>
+    <section id="experience" style={{ padding: '120px 40px', maxWidth: T.col, margin: '0 auto' }}>
       <SectionLabel>Experience</SectionLabel>
-      <div style={{ position: 'relative', paddingLeft: 28 }}>
-        {/* Timeline spine */}
-        <div style={{ position: 'absolute', left: 0, top: 6, bottom: 0, width: 1, background: 'linear-gradient(to bottom, rgba(34,211,238,.6), #1c1c20 90%)' }} />
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 52 }}>
-          {EXPERIENCE.map((e, i) => (
-            <div key={i} style={{ position: 'relative' }}>
-              {/* Timeline dot */}
-              <div style={{ position: 'absolute', left: -33, top: 5, width: 10, height: 10, borderRadius: '50%', background: i === 0 ? '#22d3ee' : '#1c1c20', border: `2px solid ${i === 0 ? '#22d3ee' : '#2a2a2a'}`, boxShadow: i === 0 ? '0 0 12px rgba(34,211,238,.5)' : 'none' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
-                <div>
-                  <div style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: 16, color: '#e0e0e0' }}>{e.role}</div>
-                  <a href={e.companyUrl || '#'} target={e.companyUrl ? '_blank' : undefined} rel="noopener noreferrer"
-                    style={{ color: '#22d3ee', fontSize: 14, marginTop: 3, display: 'block', textDecoration: 'none' }}>
-                    {e.company}
-                  </a>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ color: '#555', fontSize: 12, fontFamily: 'monospace' }}>{e.period}</div>
-                  <div style={{ color: '#3a3a3a', fontSize: 11, fontFamily: 'monospace', marginTop: 3 }}>{e.type}</div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginBottom: 14 }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {EXPERIENCE.map((e, i) => (
+          <div key={i} style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: 32, padding: '32px 0', borderTop: `1px solid ${T.line}` }}>
+            <div>
+              <div style={{ color: i === 0 ? T.accent : T.t4, fontSize: 12, fontFamily: T.fMono, letterSpacing: '.04em' }}>{e.period}</div>
+              <div style={{ color: T.t5, fontSize: 11, fontFamily: T.fMono, marginTop: 4, letterSpacing: '.08em', textTransform: 'uppercase' }}>{e.type}</div>
+            </div>
+            <div>
+              <h3 style={{ fontFamily: T.fSerif, fontWeight: 400, fontSize: 24, color: T.t1, letterSpacing: '-.01em', lineHeight: 1.2, marginBottom: 4 }}>
+                {e.role}
+              </h3>
+              <a href={e.companyUrl || '#'} target={e.companyUrl ? '_blank' : undefined} rel="noopener noreferrer"
+                style={{ color: T.accent, fontSize: 13, fontFamily: T.fMono, textDecoration: 'none', letterSpacing: '.02em' }}>
+                {e.company} \u2197
+              </a>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '18px 0 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {e.bullets.map((b, j) => (
-                  <div key={j} style={{ display: 'flex', gap: 10, color: '#666', fontSize: 14 }}>
-                    <span style={{ color: '#252525', fontFamily: 'monospace', flexShrink: 0 }}>\u2014</span>{b}
-                  </div>
+                  <li key={j} style={{ display: 'flex', gap: 12, color: T.t3, fontSize: 14, lineHeight: 1.65 }}>
+                    <span style={{ color: T.t6, fontFamily: T.fMono, flexShrink: 0, marginTop: 2 }}>—</span>{b}
+                  </li>
                 ))}
-              </div>
-              {/* Tech tags — skills live here */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              </ul>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 8 }}>
                 {e.tech.map(t => (
-                  <span key={t} style={{ fontSize: 11, fontFamily: 'monospace', color: '#3a3a3a', padding: '2px 8px', background: '#0e0e10', border: '1px solid #1a1a1a', borderRadius: 4 }}>{t}</span>
+                  <span key={t} style={{ fontSize: 11, fontFamily: T.fMono, color: T.t5, letterSpacing: '.04em' }}>{t}</span>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );

@@ -2,32 +2,41 @@
 import { CONFIG } from '@/lib/data/config';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { SoundType } from '@/hooks/useSound';
+import { T } from '@/lib/tokens';
 
 const LINKS = [
-  { label: 'Email',    icon: '\u2709', href: () => `mailto:${CONFIG.email}` },
-  { label: 'GitHub',   icon: 'gh',    href: () => `https://github.com/${CONFIG.social.github}` },
-  { label: 'LinkedIn', icon: 'in',    href: () => CONFIG.social.linkedin },
-  { label: 'Twitter',  icon: '\u{1D54F}',   href: () => CONFIG.social.twitter },
+  { label: 'GitHub',   href: () => `https://github.com/${CONFIG.social.github}` },
+  { label: 'LinkedIn', href: () => CONFIG.social.linkedin },
+  { label: 'Twitter',  href: () => CONFIG.social.twitter },
 ];
 
 export function Contact({ playSound }: { playSound: (t: SoundType) => void }) {
   return (
-    <section id="contact" style={{ padding: '100px 40px 160px', maxWidth: 880, margin: '0 auto' }}>
-      <SectionLabel>Contact</SectionLabel>
-      <h2 style={{ fontFamily: 'monospace', fontWeight: 800, fontSize: 'clamp(32px,5vw,64px)', color: '#f0f0f0', letterSpacing: '-.035em', marginBottom: 16 }}>
-        Let&#39;s build something.
+    <section id="contact" style={{ padding: '120px 40px 180px', maxWidth: T.col, margin: '0 auto' }}>
+      <SectionLabel>Get in touch</SectionLabel>
+      <h2 style={{ fontFamily: T.fSerif, fontWeight: 400, fontSize: 'clamp(40px,6vw,72px)', color: T.t1, letterSpacing: '-.025em', lineHeight: 1.05, marginBottom: 28 }}>
+        Let&rsquo;s build something good.
       </h2>
-      <p style={{ color: '#666', fontSize: 16, marginBottom: 52, maxWidth: 460, lineHeight: 1.85 }}>
+      <p style={{ color: T.t3, fontSize: 17, marginBottom: 48, maxWidth: 520, lineHeight: 1.7 }}>
         {CONFIG.contactLine}
       </p>
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+
+      <a href={`mailto:${CONFIG.email}`}
+        onClick={() => playSound('click')}
+        onMouseEnter={e => { (e.currentTarget.style as any).background = T.accent; (e.currentTarget.style as any).color = T.bg; playSound('hover'); }}
+        onMouseLeave={e => { (e.currentTarget.style as any).background = 'transparent'; (e.currentTarget.style as any).color = T.accent; }}
+        style={{ display: 'inline-block', padding: '14px 26px', border: `1px solid ${T.accent}`, color: T.accent, textDecoration: 'none', fontFamily: T.fMono, fontSize: 13, borderRadius: 4, letterSpacing: '.02em', transition: 'all .18s', marginBottom: 32 }}>
+        {CONFIG.email} \u2192
+      </a>
+
+      <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
         {LINKS.map(l => (
-          <a key={l.label} href={l.href()} target={l.label !== 'Email' ? '_blank' : undefined} rel="noopener noreferrer"
+          <a key={l.label} href={l.href()} target="_blank" rel="noopener noreferrer"
             onClick={() => playSound('click')}
-            onMouseEnter={e => { (e.currentTarget.style as any).borderColor = 'rgba(34,211,238,.4)'; (e.currentTarget.style as any).color = '#22d3ee'; playSound('hover'); }}
-            onMouseLeave={e => { (e.currentTarget.style as any).borderColor = '#2a2a2a'; (e.currentTarget.style as any).color = '#666'; }}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', border: '1px solid #2a2a2a', borderRadius: 6, color: '#666', textDecoration: 'none', fontFamily: 'monospace', fontSize: 13, transition: 'all .18s' }}>
-            <span style={{ fontSize: 12 }}>{l.icon}</span>{l.label}
+            onMouseEnter={e => { (e.currentTarget.style as any).color = T.t1; playSound('hover'); }}
+            onMouseLeave={e => { (e.currentTarget.style as any).color = T.t4; }}
+            style={{ color: T.t4, textDecoration: 'none', fontFamily: T.fMono, fontSize: 13, transition: 'color .18s', letterSpacing: '.04em' }}>
+            {l.label} \u2197
           </a>
         ))}
       </div>

@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {

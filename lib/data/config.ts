@@ -9,7 +9,7 @@ export const CONFIG = {
   // ── WHO YOU ARE ───────────────────────────────────────────────────────────
   name:     "ARYAN RAI",
   alias:    "askelad",
-  location: "Roorkee, India",
+  location: "ROORKEE, INDIA",
   email:    "aryanrai746@gmail.com",
 
   // Path to your resume PDF. Drop the file in /public/resume.pdf (same name)
@@ -21,21 +21,20 @@ export const CONFIG = {
     "AI Backend Developer",
     "LLM Architect",
     "Full Stack Engineer",
-    "REPLACE_ME",
   ],
 
   heroTagline: "'I build the backend that keeps your LLM from embarrassing you in production.'",
 
   // ── ABOUT ────────────────────────────────────────────────────────────────
   about: {
-    paragraph1: "REPLACE_ME: Who you are, how you got into this, what drives you. Write it like a person.",
-    paragraph2: "REPLACE_ME: What you're focused on technically right now. Be specific.",
-    techLine:   "REPLACE_ME: e.g. 'Day to day I reach for Python and FastAPI for backends, Next.js when the UI needs to be real.'",
+    paragraph1: "Hi, I'm Aryan. I enjoy solving problems and challenging myself to think differently.",
+    paragraph2: "I aim to build systems, that real people use. Hopefully a product of my own some day.",
+    techLine:   "'Day to day I reach for Python, Typescript and GO for backends, Next.js and React when the UI needs to be real.'",
     facts: [
-      { label: "Currently",     value: "Intern at FlyRank AI" },
-      { label: "Studies at",    value: "IIT Roorkee" },
-      //{ label: "Interested in", value: "REPLACE_ME: Technical interests" },
-      { label: "Based in",      value: "Roorkee" },
+    //  { label: "Currently",     value: "REPLACE_ME: What you're building" },
+      { label: "Studied at",    value: "IIT Roorkee" },
+      { label: "Interested in", value: "Technical interests" },
+      { label: "Based in",      value: "Roorkee"},
       { label: "Open to",       value: "Full-time \u00b7 Internship \u00b7 Freelance" },
     ],
   },
@@ -48,9 +47,23 @@ export const CONFIG = {
     github:     "ask-elad",
     leetcode:   "8o1pQrBIme",
     codeforces: "askelad",
-    chess:      "https://www.chess.com/member/aryan05050",
+    chess:      "aryan05050",
     linkedin:   "https://www.linkedin.com/in/aryan-rai-222442293/",
     twitter:    "https://x.com/ask_elad",
+  },
+
+  // ── GITHUB PAGE (curated) ─────────────────────────────────────────────────
+  // Tell the GitHub page WHICH repos to feature. Put 3–5 repo names here in
+  // the order you want them shown. Leave empty and it falls back to your
+  // most-recently-updated repos. We DON'T sort by stars — quality over vanity.
+  github: {
+    pinnedRepos: [] as string[],     // e.g. ["llm-server", "fastapi-rate-limit"]
+    blurb: "Github storing all my digital annecdotes, open source contributions and projects.",
+  },
+
+  // ── CP PAGE (curated headline) ────────────────────────────────────────────
+  cp: {
+    blurb: "Started to enjoy solving complex algorithmic problems",
   },
 
   // ── NOW PAGE (only via cmdk) ─────────────────────────────────────────────

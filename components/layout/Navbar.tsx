@@ -3,14 +3,15 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CONFIG } from '@/lib/data/config';
 import { SoundType } from '@/hooks/useSound';
+import { T } from '@/lib/tokens';
 import { prefetch } from '@/lib/dataCache';
 
 const NAV = [
   { label: 'About',      section: 'about' },
-  { label: 'Projects',   section: 'projects' },
+  { label: 'Work',       section: 'projects' },
   { label: 'Experience', section: 'experience' },
-  { label: 'Hobbies',   page: '/hobbies' },
-  { label: 'Blog',       section: 'blog' },
+  { label: 'Writing',    section: 'blog' },
+  { label: 'Hobbies',    page: '/hobbies' },
   { label: 'GitHub',     page: '/github' },
   { label: 'CP',         page: '/cp' },
   { label: 'Contact',    section: 'contact' },
@@ -22,7 +23,7 @@ interface Props {
 }
 
 export function Navbar({ onCmd, playSound }: Props) {
-  const [blink, setBlink]   = useState(true);
+  const [blink, setBlink]       = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
 
@@ -33,19 +34,15 @@ export function Navbar({ onCmd, playSound }: Props) {
     return () => { clearInterval(t); window.removeEventListener('scroll', s); };
   }, []);
 
-  // Navbar is mounted on every page, so this fires as soon as someone lands
-  // anywhere on the site — by the time they actually click into GitHub/CP,
-  // the data is already loaded (or close to it) instead of starting cold.
+  // Kick off background fetches the moment ANY page loads so GitHub/CP feel
+  // instant when the user actually navigates there.
   useEffect(() => {
-    if (CONFIG.social.github && !CONFIG.social.github.startsWith('REPLACE')) {
+    if (CONFIG.social.github    && !CONFIG.social.github.startsWith('REPLACE'))
       prefetch(`/api/github?username=${CONFIG.social.github}`);
-    }
-    if (CONFIG.social.leetcode && !CONFIG.social.leetcode.startsWith('REPLACE')) {
+    if (CONFIG.social.leetcode  && !CONFIG.social.leetcode.startsWith('REPLACE'))
       prefetch(`/api/leetcode?username=${CONFIG.social.leetcode}`);
-    }
-    if (CONFIG.social.codeforces && !CONFIG.social.codeforces.startsWith('REPLACE')) {
+    if (CONFIG.social.codeforces && !CONFIG.social.codeforces.startsWith('REPLACE'))
       prefetch(`/api/codeforces?handle=${CONFIG.social.codeforces}`);
-    }
   }, []);
 
   const go = (link: typeof NAV[number]) => {
@@ -66,42 +63,39 @@ export function Navbar({ onCmd, playSound }: Props) {
 
   return (
     <nav style={{
-      position: 'fixed', top: 0, left: 0, right: 0, height: 68, zIndex: 100,
-      background: scrolled ? 'rgba(8,8,8,.92)' : 'rgba(8,8,8,.75)',
-      backdropFilter: 'blur(16px)',
-      borderBottom: `1px solid ${scrolled ? '#1c1c20' : 'transparent'}`,
-      display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', padding: '0 40px',
+      position: 'fixed', top: 0, left: 0, right: 0, height: 64, zIndex: 100,
+      background: scrolled ? 'rgba(8,8,8,.85)' : 'rgba(8,8,8,.55)',
+      backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+      borderBottom: scrolled ? `1px solid ${T.line}` : '1px solid transparent',
+      display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', padding: '0 32px',
       transition: 'border-color .3s, background .3s',
     }}>
-      {/* Logo — far left edge */}
       <div onClick={goHome}
-        onMouseEnter={e => { (e.currentTarget.children[0] as HTMLElement).style.color = '#22d3ee'; playSound('hover'); }}
-        onMouseLeave={e => { (e.currentTarget.children[0] as HTMLElement).style.color = '#f0f0f0'; }}
-        style={{ justifySelf: 'start', cursor: 'pointer' }}>
-        <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 22, color: '#f0f0f0', transition: 'color .15s', letterSpacing: '-.01em', userSelect: 'none' }}>
+        onMouseEnter={e => { (e.currentTarget.children[0] as HTMLElement).style.color = T.accent; playSound('hover'); }}
+        onMouseLeave={e => { (e.currentTarget.children[0] as HTMLElement).style.color = T.t1; }}
+        style={{ justifySelf: 'start', cursor: 'none' }}>
+        <span style={{ fontFamily: T.fMono, fontWeight: 600, fontSize: 16, color: T.t1, transition: 'color .15s', letterSpacing: '-.01em', userSelect: 'none' }}>
           {CONFIG.alias}
-          <span style={{ opacity: blink ? 1 : 0, color: '#22d3ee', transition: 'opacity .08s' }}>_</span>
+          <span style={{ opacity: blink ? 1 : 0, color: T.accent, transition: 'opacity .08s' }}>_</span>
         </span>
       </div>
 
-      {/* Nav links — centered, independent of logo/cmdk widths */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifySelf: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 2, justifySelf: 'center' }}>
         {NAV.map(link => (
           <button key={link.label} onClick={() => go(link)}
-            onMouseEnter={e => { e.currentTarget.style.color = '#22d3ee'; playSound('hover'); }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#555'; }}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555', fontSize: 15, fontFamily: 'inherit', padding: '6px 10px', whiteSpace: 'nowrap', transition: 'color .15s' }}>
+            onMouseEnter={e => { e.currentTarget.style.color = T.t1; playSound('hover'); }}
+            onMouseLeave={e => { e.currentTarget.style.color = T.t4; }}
+            style={{ background: 'none', border: 'none', cursor: 'none', color: T.t4, fontSize: 13, fontFamily: T.fSans, padding: '6px 12px', whiteSpace: 'nowrap', transition: 'color .15s', letterSpacing: '.01em' }}>
             {link.label}
           </button>
         ))}
       </div>
 
-      {/* ⌘K — far right edge */}
       <button onClick={() => { onCmd(); playSound('open'); }}
-        onMouseEnter={e => { (e.currentTarget.style as any).borderColor = 'rgba(34,211,238,.35)'; playSound('hover'); }}
-        onMouseLeave={e => { (e.currentTarget.style as any).borderColor = '#2a2a2a'; }}
-        style={{ justifySelf: 'end', background: '#0e0e10', border: '1px solid #2a2a2a', borderRadius: 6, padding: '7px 12px', color: '#666', fontSize: 14, fontFamily: 'monospace', cursor: 'pointer', transition: 'border-color .2s' }}>
-        ⌘K
+        onMouseEnter={e => { (e.currentTarget.style as any).borderColor = T.accent + '88'; (e.currentTarget.style as any).color = T.t1; playSound('hover'); }}
+        onMouseLeave={e => { (e.currentTarget.style as any).borderColor = T.line; (e.currentTarget.style as any).color = T.t3; }}
+        style={{ justifySelf: 'end', background: T.ink, border: `1px solid ${T.line}`, borderRadius: 6, padding: '6px 11px', color: T.t3, fontSize: 12, fontFamily: T.fMono, cursor: 'none', transition: 'all .2s', letterSpacing: '.04em' }}>
+        ⌘ K
       </button>
     </nav>
   );

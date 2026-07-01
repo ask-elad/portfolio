@@ -13,6 +13,7 @@ import { Projects }  from '@/components/sections/Projects';
 import { Experience} from '@/components/sections/Experience';
 import { Blog }      from '@/components/sections/Blog';
 import { Contact }   from '@/components/sections/Contact';
+import { T }         from '@/lib/tokens';
 
 export default function HomeClient() {
   const [cmdOpen, setCmdOpen]   = useState(false);
@@ -20,7 +21,6 @@ export default function HomeClient() {
   const playSound = useSound();
   const router    = useRouter();
 
-  // Global ⌘K shortcut
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -50,7 +50,7 @@ export default function HomeClient() {
   }, [playSound]);
 
   return (
-    <div style={{ background: '#080808', minHeight: '100vh', color: '#f0f0f0', fontFamily: "'Inter', system-ui, -apple-system, sans-serif"}}>
+    <div style={{ background: T.bg, minHeight: '100vh', color: T.t1, fontFamily: T.fSans }}>
       <Cursor />
       {vinland && <VinlandEasterEgg onClose={() => setVinland(false)} />}
       <CommandPalette
@@ -62,22 +62,13 @@ export default function HomeClient() {
       <Navbar onCmd={() => { setCmdOpen(true); playSound('open'); }} playSound={playSound} />
       <main style={{ paddingTop: 68 }}>
         <Hero       playSound={playSound} />
-        <Divider />
         <About />
-        <Divider />
         <Projects   playSound={playSound} />
-        <Divider />
         <Experience />
-        <Divider />
         <Blog       playSound={playSound} />
-        <Divider />
         <Contact    playSound={playSound} />
       </main>
       <Footer />
     </div>
   );
-}
-
-function Divider() {
-  return <div style={{ maxWidth: 880, margin: '0 auto', borderTop: '1px solid #1c1c20' }} />;
 }
