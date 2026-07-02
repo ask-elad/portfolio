@@ -1,5 +1,3 @@
-// Shared design tokens — kept as a plain object so existing inline-style
-// components don't need to be rewritten. Mirror of the CSS variables in globals.css.
 export const T = {
   bg: '#080808',
   ink: '#0a0a0c',
@@ -22,4 +20,22 @@ export const T = {
   col: 760,
   wide: 1080,
   edit: 1200,
+ 
+  // Nested aliases — same values as above, for components that prefer
+  // object notation (e.g. T.font.serif, T.color.border).
+  // All existing components continue using the flat keys above unchanged.
+  font: {
+    sans:  "'Inter', system-ui, -apple-system, sans-serif",
+    serif: "'Instrument Serif', 'Times New Roman', serif",
+    mono:  "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace",
+  },
+  color: {
+    bg:      '#080808',
+    surface: '#0a0a0c',
+    border:  '#1c1c20',
+    accent:  '#22d3ee',
+    text:    '#ededed',
+    muted:   '#5e5e63',
+  },
 } as const;
+ 
