@@ -3,10 +3,10 @@ import { useState, useEffect, useRef } from 'react';
 import { PageShell } from '@/components/layout/PageShell';
 import { CONFIG } from '@/lib/data/config';
 import { T } from '@/lib/tokens';
-import { fetchCached } from '@/lib/dataCache';
- 
+import { fetchCached, getCached } from '@/lib/dataCache';
+
 const COLORS = ['#0e0e10','#0c4a6e','#0369a1','#0ea5e9','#22d3ee'];
- 
+
 function HeatMap({ weeks }: { weeks: { level: 0|1|2|3|4; date?: string; count?: number }[][] }) {
   return (
     <div style={{ overflowX: 'auto' }}>
@@ -23,7 +23,7 @@ function HeatMap({ weeks }: { weeks: { level: 0|1|2|3|4; date?: string; count?: 
     </div>
   );
 }
- 
+
 function StaticHeatMap() {
   const ref = useRef<{ level: 0|1|2|3|4 }[][]>();
   if (!ref.current) {
@@ -36,24 +36,26 @@ function StaticHeatMap() {
   }
   return <HeatMap weeks={ref.current} />;
 }
- 
+
 export default function GitHubPage() {
-  const [gh, setGh]           = useState<any>(null);
-  const [loading, setLoading] = useState(true);
- 
+  const url = CONFIG.social.github && !CONFIG.social.github.startsWith('REPLACE')
+    ? `/api/github?username=${CONFIG.social.github}` : null;
+
+  const [gh, setGh]           = useState<any>(() => url ? getCached(url) : null);
+  const [loading, setLoading] = useState(() => url ? !getCached(url) : false);
+
   useEffect(() => {
-    if (!CONFIG.social.github || CONFIG.social.github.startsWith('REPLACE')) { setLoading(false); return; }
-    fetchCached(`/api/github?username=${CONFIG.social.github}`)
-      .then(setGh).catch(() => {}).finally(() => setLoading(false));
-  }, []);
- 
+    if (!url) return;
+    fetchCached(url).then(data => { setGh(data); setLoading(false); }).catch(() => setLoading(false));
+  }, [url]);
+
   const user     = gh?.user;
   const allRepos = (gh?.repos ?? []) as any[];
   const pinned   = CONFIG.github.pinnedRepos ?? [];
   const featured = pinned.length
     ? pinned.map((n: string) => allRepos.find(r => r.name === n)).filter(Boolean).slice(0, 4)
     : [...allRepos].sort((a, b) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime()).slice(0, 4);
- 
+
   let heatmapWeeks: { level: 0|1|2|3|4; date: string; count: number }[][] | null = null;
   if (gh?.contributions?.contributions) {
     const days = gh.contributions.contributions;
@@ -61,15 +63,15 @@ export default function GitHubPage() {
     for (let i = 0; i < days.length; i += 7) chunked.push(days.slice(i, i + 7));
     heatmapWeeks = chunked;
   }
- 
+
   const blurb = CONFIG.github.blurb && !CONFIG.github.blurb.startsWith('REPLACE') ? CONFIG.github.blurb : undefined;
- 
+
   return (
     <PageShell eyebrow="GitHub" title="What I&rsquo;m shipping" subtitle={blurb}>
       {({ playSound }) => (
         <>
           {loading && <div style={{ color: T.t6, fontFamily: T.fMono, fontSize: 12 }}>loading…</div>}
- 
+
           {!loading && (
             <>
               {user && (
@@ -97,7 +99,7 @@ export default function GitHubPage() {
                   </div>
                 </div>
               )}
- 
+
               <div style={{ marginBottom: 64 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 18 }}>
                   <span style={{ color: T.t5, fontSize: 11, fontFamily: T.fMono, letterSpacing: '.14em', textTransform: 'uppercase' }}>Contribution rhythm — last 12 months</span>
@@ -105,7 +107,7 @@ export default function GitHubPage() {
                 </div>
                 {heatmapWeeks ? <HeatMap weeks={heatmapWeeks} /> : <StaticHeatMap />}
               </div>
- 
+
               {featured.length > 0 && (
                 <>
                   <div style={{ color: T.t5, fontSize: 11, fontFamily: T.fMono, letterSpacing: '.14em', textTransform: 'uppercase', marginBottom: 24 }}>
@@ -131,13 +133,13 @@ export default function GitHubPage() {
                   </div>
                 </>
               )}
- 
+
               {!pinned.length && allRepos.length > 0 && (
                 <p style={{ marginTop: 32, color: T.t6, fontSize: 12, fontFamily: T.fMono }}>
                   Tip: add repo names to <code style={{ color: T.t4 }}>github.pinnedRepos</code> in config.ts to curate this list.
                 </p>
               )}
- 
+
               {user && (
                 <a href={`https://github.com/${user.login}`} target="_blank" rel="noopener noreferrer"
                   onClick={() => playSound('click')}
@@ -147,7 +149,7 @@ export default function GitHubPage() {
                   See everything on GitHub ↗
                 </a>
               )}
- 
+
               {!user && (
                 <p style={{ color: T.t6, fontFamily: T.fMono, fontSize: 13 }}>
                   Set your GitHub username in <code style={{ color: T.accent }}>lib/data/config.ts</code> to load live stats.
@@ -160,4 +162,3 @@ export default function GitHubPage() {
     </PageShell>
   );
 }
- 

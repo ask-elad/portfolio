@@ -39,14 +39,13 @@ export function PageShell({ eyebrow, title, subtitle, maxWidth = T.col, children
   }, [playSound, router]);
 
   return (
-    <div style={{ background: T.bg, minHeight: '100vh', color: T.t1, fontFamily: T.fSans }}>
+    <div style={{ background: T.bg, minHeight: '100vh', color: T.t1, fontFamily: T.fSans, display: 'flex', flexDirection: 'column' }}>
       <Cursor />
       {vinland && <VinlandEasterEgg onClose={() => setVinland(false)} />}
       <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} onSelect={handleCmd}
         onVinland={() => { setVinland(true); playSound('vinland'); setCmdOpen(false); }} />
       <Navbar onCmd={() => { setCmdOpen(true); playSound('open'); }} playSound={playSound} />
-
-      <main style={{ paddingTop: 68 }}>
+      <main style={{ paddingTop: 68, flex: 1 }}>
         <div style={{ maxWidth, margin: '0 auto', padding: '88px 40px 40px' }}>
           <button onClick={() => { router.push('/'); playSound('click'); }}
             onMouseEnter={e => { e.currentTarget.style.color = T.accent; playSound('hover'); }}
@@ -55,7 +54,6 @@ export function PageShell({ eyebrow, title, subtitle, maxWidth = T.col, children
             <span style={{ display: 'inline-block', width: 14, height: 1, background: 'currentColor' }} />
             Back
           </button>
-
           <div style={{ color: T.accent, fontFamily: T.fMono, fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: title ? 18 : 40, fontWeight: 500 }}>
             {eyebrow}
           </div>
@@ -69,7 +67,6 @@ export function PageShell({ eyebrow, title, subtitle, maxWidth = T.col, children
               {subtitle}
             </p>
           )}
-
           {children({ playSound })}
         </div>
       </main>
