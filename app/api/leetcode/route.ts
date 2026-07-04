@@ -1,6 +1,7 @@
 export const revalidate = 3600;
 
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'edge';
 
 const QUERY = `
   query getUserProfile($username: String!) {

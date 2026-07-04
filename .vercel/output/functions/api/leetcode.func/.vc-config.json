@@ -1,0 +1,18 @@
+{
+  "runtime": "edge",
+  "name": "api/leetcode",
+  "deploymentTarget": "v8-worker",
+  "entrypoint": "index.js",
+  "assets": [],
+  "framework": {
+    "slug": "nextjs",
+    "version": "15.5.7"
+  },
+  "environment": {
+    "__NEXT_BUILD_ID": "SwpZguVXEqcR2NvxqQXSC",
+    "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "aKx3Sw3htIhcVA0xbwh7MaAf9UJi4Is0YUsN+FGmx78=",
+    "__NEXT_PREVIEW_MODE_ID": "149434c8faa616f781460f87c28e2c81",
+    "__NEXT_PREVIEW_MODE_SIGNING_KEY": "dea9078389b462f9b69b60457c4a1be942f78aba3dd242df7444ff1a3f0c7a5e",
+    "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "e090adf1667befe39a52068c20bb6a045ffda1918457a73f55c98b0dafba4e7a"
+  }
+}

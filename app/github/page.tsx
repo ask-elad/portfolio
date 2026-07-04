@@ -25,7 +25,7 @@ function HeatMap({ weeks }: { weeks: { level: 0|1|2|3|4; date?: string; count?: 
 }
 
 function StaticHeatMap() {
-  const ref = useRef<{ level: 0|1|2|3|4 }[][]>();
+  const ref = useRef<{ level: 0|1|2|3|4 }[][]>(undefined);
   if (!ref.current) {
     ref.current = Array.from({ length: 52 }, () =>
       Array.from({ length: 7 }, () => {

@@ -1,6 +1,8 @@
 export const revalidate = 3600;
 
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'edge';
+
 
 export async function GET(req: NextRequest) {
   const username = req.nextUrl.searchParams.get('username');
