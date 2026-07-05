@@ -38,23 +38,21 @@ function StaticHeatMap() {
 }
 
 export default function GitHubPage() {
-  const url = CONFIG.social.github && !CONFIG.social.github.startsWith('REPLACE')
+  const apiUrl = CONFIG.social.github && !CONFIG.social.github.startsWith('REPLACE')
     ? `/api/github?username=${CONFIG.social.github}` : null;
 
-  const [gh, setGh]           = useState<any>(() => url ? getCached(url) : null);
-  const [loading, setLoading] = useState(() => url ? !getCached(url) : false);
+  const [gh, setGh]           = useState<any>(() => apiUrl ? getCached(apiUrl) : null);
+  const [loading, setLoading] = useState(() => apiUrl ? !getCached(apiUrl) : false);
 
   useEffect(() => {
-    if (!url) return;
-    fetchCached(url).then(data => { setGh(data); setLoading(false); }).catch(() => setLoading(false));
-  }, [url]);
+    if (!apiUrl) return;
+    fetchCached(apiUrl)
+      .then(data => { setGh(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [apiUrl]);
 
-  const user     = gh?.user;
-  const allRepos = (gh?.repos ?? []) as any[];
-  const pinned   = CONFIG.github.pinnedRepos ?? [];
-  const featured = pinned.length
-    ? pinned.map((n: string) => allRepos.find(r => r.name === n)).filter(Boolean).slice(0, 4)
-    : [...allRepos].sort((a, b) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime()).slice(0, 4);
+  const user        = gh?.user;
+  const pinnedRepos = (gh?.pinnedRepos ?? []) as any[];
 
   let heatmapWeeks: { level: 0|1|2|3|4; date: string; count: number }[][] | null = null;
   if (gh?.contributions?.contributions) {
@@ -64,7 +62,8 @@ export default function GitHubPage() {
     heatmapWeeks = chunked;
   }
 
-  const blurb = CONFIG.github.blurb && !CONFIG.github.blurb.startsWith('REPLACE') ? CONFIG.github.blurb : undefined;
+  const blurb = CONFIG.github.blurb && !CONFIG.github.blurb.startsWith('REPLACE')
+    ? CONFIG.github.blurb : undefined;
 
   return (
     <PageShell eyebrow="GitHub" title="What I&rsquo;m shipping" subtitle={blurb}>
@@ -74,6 +73,7 @@ export default function GitHubPage() {
 
           {!loading && (
             <>
+              {/* Profile */}
               {user && (
                 <div style={{ display: 'flex', gap: 24, alignItems: 'center', marginBottom: 56, paddingBottom: 32, borderBottom: `1px solid ${T.line}` }}>
                   {user.avatar_url && (
@@ -100,33 +100,51 @@ export default function GitHubPage() {
                 </div>
               )}
 
+              {/* Contribution heatmap */}
               <div style={{ marginBottom: 64 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 18 }}>
-                  <span style={{ color: T.t5, fontSize: 11, fontFamily: T.fMono, letterSpacing: '.14em', textTransform: 'uppercase' }}>Contribution rhythm — last 12 months</span>
+                  <span style={{ color: T.t5, fontSize: 11, fontFamily: T.fMono, letterSpacing: '.14em', textTransform: 'uppercase' }}>
+                    Contribution rhythm — last 12 months
+                  </span>
                   {user && <span style={{ color: T.t5, fontSize: 11, fontFamily: T.fMono }}>@{user.login}</span>}
                 </div>
                 {heatmapWeeks ? <HeatMap weeks={heatmapWeeks} /> : <StaticHeatMap />}
               </div>
 
-              {featured.length > 0 && (
+              {/* Pinned repos — sourced live from GitHub, updates automatically when you change your pins */}
+              {pinnedRepos.length > 0 && (
                 <>
                   <div style={{ color: T.t5, fontSize: 11, fontFamily: T.fMono, letterSpacing: '.14em', textTransform: 'uppercase', marginBottom: 24 }}>
-                    {pinned.length ? 'Pinned' : 'Recent work'}
+                    Pinned
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {featured.map((r: any, i: number) => (
-                      <a key={r.name} href={r.html_url} target="_blank" rel="noopener noreferrer"
+                    {pinnedRepos.map((r: any, i: number) => (
+                      <a key={r.name} href={r.url} target="_blank" rel="noopener noreferrer"
                         onClick={() => playSound('click')}
                         onMouseEnter={e => { const h = e.currentTarget.querySelector('h3') as HTMLElement | null; if (h) h.style.color = T.accent; playSound('hover'); }}
                         onMouseLeave={e => { const h = e.currentTarget.querySelector('h3') as HTMLElement | null; if (h) h.style.color = T.t1; }}
-                        style={{ padding: '28px 0', borderTop: `1px solid ${T.line}`, borderBottom: i === featured.length - 1 ? `1px solid ${T.line}` : 'none', textDecoration: 'none', display: 'grid', gridTemplateColumns: '1fr auto', gap: 20, alignItems: 'baseline', cursor: 'none' }}>
+                        style={{ padding: '28px 0', borderTop: `1px solid ${T.line}`, borderBottom: i === pinnedRepos.length - 1 ? `1px solid ${T.line}` : 'none', textDecoration: 'none', display: 'grid', gridTemplateColumns: '1fr auto', gap: 20, alignItems: 'baseline', cursor: 'none' }}>
                         <div>
-                          <h3 style={{ fontFamily: T.fSerif, fontWeight: 400, fontSize: 24, color: T.t1, letterSpacing: '-.01em', lineHeight: 1.2, marginBottom: 8, transition: 'color .15s' }}>{r.name}</h3>
-                          <p style={{ color: T.t3, fontSize: 14, lineHeight: 1.65, margin: 0, maxWidth: 520 }}>{r.description || 'No description.'}</p>
+                          <h3 style={{ fontFamily: T.fSerif, fontWeight: 400, fontSize: 24, color: T.t1, letterSpacing: '-.01em', lineHeight: 1.2, marginBottom: 8, transition: 'color .15s' }}>
+                            {r.name}
+                          </h3>
+                          <p style={{ color: T.t3, fontSize: 14, lineHeight: 1.65, margin: 0, maxWidth: 520 }}>
+                            {r.description || 'No description.'}
+                          </p>
                         </div>
                         <div style={{ textAlign: 'right', color: T.t5, fontSize: 11, fontFamily: T.fMono, letterSpacing: '.04em' }}>
-                          {r.language && <div style={{ color: T.t4 }}>{r.language}</div>}
-                          <div style={{ marginTop: 4 }}>Updated {new Date(r.pushed_at).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}</div>
+                          {r.primaryLanguage && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 5, justifyContent: 'flex-end', marginBottom: 4 }}>
+                              <span style={{ width: 8, height: 8, borderRadius: '50%', background: r.primaryLanguage.color || T.t4, display: 'inline-block' }} />
+                              <span style={{ color: T.t4 }}>{r.primaryLanguage.name}</span>
+                            </div>
+                          )}
+                          {r.stargazerCount > 0 && (
+                            <div style={{ color: T.t5 }}>★ {r.stargazerCount}</div>
+                          )}
+                          <div style={{ marginTop: 4 }}>
+                            Updated {new Date(r.pushedAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}
+                          </div>
                         </div>
                       </a>
                     ))}
@@ -134,9 +152,9 @@ export default function GitHubPage() {
                 </>
               )}
 
-              {!pinned.length && allRepos.length > 0 && (
-                <p style={{ marginTop: 32, color: T.t6, fontSize: 12, fontFamily: T.fMono }}>
-                  Tip: add repo names to <code style={{ color: T.t4 }}>github.pinnedRepos</code> in config.ts to curate this list.
+              {pinnedRepos.length === 0 && user && (
+                <p style={{ color: T.t6, fontFamily: T.fMono, fontSize: 12 }}>
+                  Pin some repos on your GitHub profile and they'll show up here automatically.
                 </p>
               )}
 
