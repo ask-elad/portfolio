@@ -5,6 +5,10 @@ import { CONFIG } from '@/lib/data/config';
 import { T } from '@/lib/tokens';
 import { fetchCached } from '@/lib/dataCache';
 
+// ── Change this number to see more or fewer days on both graphs ──────────────
+const ACTIVITY_DAYS = 90;
+// ─────────────────────────────────────────────────────────────────────────────
+
 function cfTier(r: number) {
   if (r >= 2400) return { color: '#ff4d4d', label: 'International Grandmaster' };
   if (r >= 2100) return { color: '#ff8c00', label: 'Master' };
@@ -72,6 +76,74 @@ function DifficultyBar({ e, m, h }: { e: number; m: number; h: number }) {
   );
 }
 
+// Green block-grid graph — same visual language as LC/CF/GitHub contribution graphs.
+// Chunks days into columns of 7 so it scales to any ACTIVITY_DAYS value.
+const GREENS = ['#0a1a0a', '#14532d', '#166534', '#15803d', '#22c55e'];
+function blockLevel(count: number) {
+  if (count === 0) return 0;
+  if (count <= 2)  return 1;
+  if (count <= 5)  return 2;
+  if (count <= 9)  return 3;
+  return 4;
+}
+
+function ActivityGraph({ days }: { days: { date: string; count: number }[] }) {
+  const weeks: typeof days[] = [];
+  for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
+
+  return (
+    <div>
+      <div style={{ color: T.t5, fontSize: 10, fontFamily: T.fMono, letterSpacing: '.14em', textTransform: 'uppercase', marginBottom: 10 }}>
+        Last {days.length} days
+      </div>
+      <div style={{ display: 'flex', gap: 3 }}>
+        {weeks.map((week, wi) => (
+          <div key={wi} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            {week.map((d, di) => (
+              <div key={di}
+                title={`${d.count} submission${d.count !== 1 ? 's' : ''} · ${d.date}`}
+                style={{
+                  width: 10, height: 10,
+                  borderRadius: 2,
+                  background: GREENS[blockLevel(d.count)],
+                  border: '1px solid rgba(255,255,255,0.04)',
+                  cursor: 'default',
+                  transition: 'transform .1s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.35)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      {/* Legend */}
+      <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginTop: 8 }}>
+        <span style={{ color: T.t6, fontSize: 9, fontFamily: T.fMono, marginRight: 2 }}>less</span>
+        {GREENS.map(c => (
+          <div key={c} style={{ width: 9, height: 9, borderRadius: 2, background: c, border: '1px solid rgba(255,255,255,0.04)' }} />
+        ))}
+        <span style={{ color: T.t6, fontSize: 9, fontFamily: T.fMono, marginLeft: 2 }}>more</span>
+      </div>
+    </div>
+  );
+}
+
+// Parse LeetCode's submissionCalendar JSON string → ACTIVITY_DAYS-length array
+function parseLcCalendar(calendar: string | null | undefined): { date: string; count: number }[] {
+  const data: Record<string, number> = {};
+  if (calendar) { try { Object.assign(data, JSON.parse(calendar)); } catch (_) {} }
+  const now        = Math.floor(Date.now() / 1000);
+  const todayStart = now - (now % 86400);
+  return Array.from({ length: ACTIVITY_DAYS }, (_, i) => {
+    const ts = todayStart - (ACTIVITY_DAYS - 1 - i) * 86400;
+    return {
+      date:  new Date(ts * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      count: data[String(ts)] ?? 0,
+    };
+  });
+}
+
 export default function CPPage() {
   const [lc, setLc] = useState<any>(null);
   const [cf, setCf] = useState<any>(null);
@@ -89,13 +161,16 @@ export default function CPPage() {
   const solved    = { Easy: 0, Medium: 0, Hard: 0 };
   acSubs.forEach((s: any) => { if (s.difficulty in solved) solved[s.difficulty as keyof typeof solved] = s.count; });
   const totalSolved = solved.Easy + solved.Medium + solved.Hard;
+  const lcActivity  = parseLcCalendar(lcUser?.submissionCalendar);
 
-  const cfInfo    = cf?.info;
-  const cfCurrent = cfInfo?.rating ?? 0;
-  const cfMax     = cfInfo?.maxRating ?? 0;
+  const cfInfo          = cf?.info;
+  const cfCurrent       = cfInfo?.rating ?? 0;
+  const cfMax           = cfInfo?.maxRating ?? 0;
   const cfRating: any[] = cf?.rating ?? [];
-  const cfSeries  = cfRating.map(r => r.newRating as number);
-  const tier      = cfTier(cfCurrent);
+  const cfSeries        = cfRating.map(r => r.newRating as number);
+  // Slice to ACTIVITY_DAYS from the 60-day array the route returns
+  const cfActivity: { date: string; count: number }[] = (cf?.recentActivity ?? []).slice(-ACTIVITY_DAYS);
+  const tier            = cfTier(cfCurrent);
 
   const blurb = CONFIG.cp.blurb && !CONFIG.cp.blurb.startsWith('REPLACE') ? CONFIG.cp.blurb : undefined;
 
@@ -103,8 +178,9 @@ export default function CPPage() {
     <PageShell eyebrow="Competitive Programming" title="Problem-solving, kept honest" subtitle={blurb}>
       {({ playSound }) => (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, marginTop: 16 }}>
-          {/* LeetCode */}
-          <section style={{ borderTop: `1px solid ${T.line}`, paddingTop: 32 }}>
+
+          {/* ── LeetCode ─────────────────────────────────────────────── */}
+          <section style={{ borderTop: `1px solid ${T.line}`, paddingTop: 32, display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 32 }}>
               <h2 style={{ fontFamily: T.fSerif, fontWeight: 400, fontSize: 26, color: T.t1, letterSpacing: '-.01em' }}>LeetCode</h2>
               <a href={`https://leetcode.com/${CONFIG.social.leetcode}`} target="_blank" rel="noopener noreferrer"
@@ -115,31 +191,39 @@ export default function CPPage() {
                 @{CONFIG.social.leetcode} {'\u2197'}
               </a>
             </div>
+
             {!lcUser ? (
               <div style={{ color: T.t6, fontFamily: T.fMono, fontSize: 12 }}>loading…</div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
-                <div style={{ display: 'flex', gap: 40, alignItems: 'baseline' }}>
-                  <Stat label="Contest rating"
-                    value={lcContest?.rating ? String(Math.round(lcContest.rating)) : '—'}
-                    accent={lcContest?.rating ? '#f59e0b' : undefined} />
-                  {lcContest?.attendedContestsCount != null && (
-                    <div style={{ color: T.t4, fontFamily: T.fMono, fontSize: 12 }}>
-                      {lcContest.attendedContestsCount} contests
-                      {lcContest.topPercentage != null && (
-                        <span style={{ color: T.t5 }}> · top {lcContest.topPercentage.toFixed(1)}%</span>
-                      )}
-                    </div>
-                  )}
+              <>
+                {/* Stats — flex:1 so they push graph to bottom */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 36, flex: 1 }}>
+                  <div style={{ display: 'flex', gap: 40, alignItems: 'baseline' }}>
+                    <Stat label="Contest rating"
+                      value={lcContest?.rating ? String(Math.round(lcContest.rating)) : '—'}
+                      accent={lcContest?.rating ? '#f59e0b' : undefined} />
+                    {lcContest?.attendedContestsCount != null && (
+                      <div style={{ color: T.t4, fontFamily: T.fMono, fontSize: 12 }}>
+                        {lcContest.attendedContestsCount} contests
+                        {lcContest.topPercentage != null && (
+                          <span style={{ color: T.t5 }}> · top {lcContest.topPercentage.toFixed(1)}%</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <Stat label="Problems solved" value={String(totalSolved)} accent={T.accent} />
+                  <DifficultyBar e={solved.Easy} m={solved.Medium} h={solved.Hard} />
                 </div>
-                <Stat label="Problems solved" value={String(totalSolved)} accent={T.accent} />
-                <DifficultyBar e={solved.Easy} m={solved.Medium} h={solved.Hard} />
-              </div>
+                {/* Graph — always at bottom of section */}
+                <div style={{ paddingTop: 36 }}>
+                  <ActivityGraph days={lcActivity} />
+                </div>
+              </>
             )}
           </section>
 
-          {/* Codeforces */}
-          <section style={{ borderTop: `1px solid ${T.line}`, paddingTop: 32 }}>
+          {/* ── Codeforces ───────────────────────────────────────────── */}
+          <section style={{ borderTop: `1px solid ${T.line}`, paddingTop: 32, display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 32 }}>
               <h2 style={{ fontFamily: T.fSerif, fontWeight: 400, fontSize: 26, color: T.t1, letterSpacing: '-.01em' }}>Codeforces</h2>
               <a href={`https://codeforces.com/profile/${CONFIG.social.codeforces}`} target="_blank" rel="noopener noreferrer"
@@ -150,29 +234,38 @@ export default function CPPage() {
                 @{CONFIG.social.codeforces} {'\u2197'}
               </a>
             </div>
+
             {!cfInfo ? (
               <div style={{ color: T.t6, fontFamily: T.fMono, fontSize: 12 }}>loading…</div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
-                <div>
-                  <Stat label="Current rating" value={String(cfCurrent)} accent={tier.color} />
-                  <div style={{ marginTop: 10, color: tier.color, fontFamily: T.fMono, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase' }}>{tier.label}</div>
-                </div>
-                {cfSeries.length > 1 && (
+              <>
+                {/* Stats — flex:1 so they push graph to bottom */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 36, flex: 1 }}>
                   <div>
-                    <div style={{ color: T.t5, fontSize: 10, fontFamily: T.fMono, letterSpacing: '.14em', textTransform: 'uppercase', marginBottom: 10 }}>
-                      Rating over {cfSeries.length} contests
-                    </div>
-                    <Sparkline points={cfSeries} color={T.accent} />
+                    <Stat label="Current rating" value={String(cfCurrent)} accent={tier.color} />
+                    <div style={{ marginTop: 10, color: tier.color, fontFamily: T.fMono, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase' }}>{tier.label}</div>
                   </div>
-                )}
-                <div style={{ display: 'flex', gap: 24, color: T.t4, fontFamily: T.fMono, fontSize: 12, letterSpacing: '.04em' }}>
-                  <span>peak <span style={{ color: T.accent }}>{cfMax}</span></span>
-                  <span><span style={{ color: T.accent }}>{cfRating.length}</span> contests</span>
+                  {cfSeries.length > 1 && (
+                    <div>
+                      <div style={{ color: T.t5, fontSize: 10, fontFamily: T.fMono, letterSpacing: '.14em', textTransform: 'uppercase', marginBottom: 10 }}>
+                        Rating over {cfSeries.length} contests
+                      </div>
+                      <Sparkline points={cfSeries} color={T.accent} />
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', gap: 24, color: T.t4, fontFamily: T.fMono, fontSize: 12, letterSpacing: '.04em' }}>
+                    <span>peak <span style={{ color: T.accent }}>{cfMax}</span></span>
+                    <span><span style={{ color: T.accent }}>{cfRating.length}</span> contests</span>
+                  </div>
                 </div>
-              </div>
+                {/* Graph — always at bottom of section */}
+                <div style={{ paddingTop: 36 }}>
+                  <ActivityGraph days={cfActivity} />
+                </div>
+              </>
             )}
           </section>
+
         </div>
       )}
     </PageShell>

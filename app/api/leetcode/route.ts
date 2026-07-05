@@ -8,6 +8,7 @@ const QUERY = `
     allQuestionsCount { difficulty count }
     matchedUser(username: $username) {
       username
+      submissionCalendar
       profile { ranking }
       submitStats: submitStatsGlobal {
         acSubmissionNum { difficulty count submissions }
@@ -22,7 +23,6 @@ const QUERY = `
 export async function GET(req: NextRequest) {
   const username = req.nextUrl.searchParams.get('username');
   if (!username) return NextResponse.json({ error: 'username required' }, { status: 400 });
-
   try {
     const res = await fetch('https://leetcode.com/graphql', {
       method: 'POST',
