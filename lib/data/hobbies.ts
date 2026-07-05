@@ -4,8 +4,8 @@
 export const CHESS_CONFIG = {
   // A personal line about chess. Write it honestly.
   // e.g. "Been playing since I was 14. Still chasing 1500 rapid."
-  line: "REPLACE_ME: Your personal chess line.",
-
+  line: "Because i like being sad.",
+  image: "/hobbies/chess.jpg",
   // Which time controls to show. Options: "rapid" | "blitz" | "bullet"
   showControls: ["rapid", "blitz"] as const,
 };
@@ -15,8 +15,8 @@ export const CHESS_CONFIG = {
 export const STANDUP_CONFIG = {
   // A personal line. Write it honestly. Why do you do it? What does it feel like?
   // e.g. "I do stand-up occasionally. Failing in front of 40 strangers is surprisingly good for your code reviews."
-  line: "REPLACE_ME: Your personal stand-up line.",
-
+  line: "Because it's funn.",
+  image: "/hobbies/StandUp.jpg",
   // Links to recordings/clips. Leave empty if you don't have any yet.
   recordings: [
     // { title: "Open Mic @ The Comedy Store", url: "https://youtube.com/...", platform: "YouTube" },

@@ -106,14 +106,13 @@ function ChessFeature({ playSound }: { playSound: (t: SoundType) => void }) {
             onMouseEnter={e => { (e.currentTarget.style as any).color = T.accent; playSound('hover'); }}
             onMouseLeave={e => { (e.currentTarget.style as any).color = T.t4; }}
             style={{ display: 'inline-block', marginTop: 28, color: T.t4, fontSize: 12, fontFamily: T.fMono, textDecoration: 'none', letterSpacing: '.04em', transition: 'color .15s' }}>
-            chess.com/{CONFIG.social.chess} \u2197
+            chess.com/{CONFIG.social.chess} ↗
           </a>
         )}
       </div>
 
       <div>
-        <Photo src="/hobbies/chess.jpg" alt="Chess" ratio="4/5" />
-        <Caption>Drop a photo at <code>/public/hobbies/chess.jpg</code>.</Caption>
+        <Photo src={CHESS_CONFIG.image} alt="Chess" ratio="4/5" />
       </div>
     </article>
   );
@@ -125,8 +124,7 @@ function StandupFeature({ playSound }: { playSound: (t: SoundType) => void }) {
   return (
     <article style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 56, alignItems: 'center', padding: '64px 0', borderBottom: `1px solid ${T.line}` }}>
       <div>
-        <Photo src="/hobbies/standup.jpg" alt="Stand-up" ratio="4/5" />
-        <Caption>Mic stand, bad lighting, perfect.</Caption>
+        <Photo src={STANDUP_CONFIG.image} alt="Stand-up" ratio="4/5" />
       </div>
       <div>
         <Eyebrow>Hobby No. 02 — On stage</Eyebrow>

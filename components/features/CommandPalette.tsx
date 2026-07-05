@@ -17,7 +17,7 @@ interface Props {
 }
 
 const COMMANDS: Command[] = [
-  { id: 'hero',       label: '\u2192 Hero',             category: 'Navigate', section: 'hero' },
+  { id: 'hero',       label: '\u2192 Home',             category: 'Navigate', section: 'hero' },
   { id: 'about',      label: '\u2192 About',            category: 'Navigate', section: 'about' },
   { id: 'projects',   label: '\u2192 Projects',         category: 'Navigate', section: 'projects' },
   { id: 'experience', label: '\u2192 Experience',       category: 'Navigate', section: 'experience' },
