@@ -16,6 +16,14 @@ export const BLOG_POSTS: BlogPost[] = [
     tags: ["HUGO", "OPEN SOURCE"],
     url: "https://blogs.kde.org/2026/03/21/season-of-kde-2026-improving-mentorship.kde.org-for-better-onboarding-of-new-contributors/",
   },
+  {
+    id: 2,
+    title: "Exploring LLM Observability with SIGNOZ",
+    date: "Jul 2026",
+    readTime: "8 min",
+    tags: ["LLM observability", "OPEN SOURCE"],
+    url: "https://medium.com/@ask-elad/i-traced-a-wasted-network-call-in-a-microservice-demo-and-cut-its-latency-by-92-abb898abe825",
+  },
   // {
   //   id: 2,
   //   title: "REPLACE_ME: Post title",

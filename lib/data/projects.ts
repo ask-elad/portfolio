@@ -16,16 +16,16 @@ export interface Project {
 // Add, remove, or edit projects here. They appear on the main page.
 // Aim for 4–6 projects. Quality > quantity.
 export const PROJECTS: Project[] = [
-    {
+  {
     id: 1,
-    name: "TwinMind AI",
-    description: "A real-time AI meeting copilot that listens to live audio, transcribes speech via Whisper, and continuously surfaces three contextual suggestions based on what is being said. Clicking a suggestion opens a detailed answer in a streaming chat panel.",
-    tags: ["React", "Node", "LLM"],
+    name: "Campus Brain",
+    description: "A unified campus intelligence dashboard for IIT Roorkee that combines a modern Next.js frontend, an Express-based orchestrator, and independent MCP servers for library, cafeteria, events, and academics. The AI assistant routes user questions to the right campus source in real time and streams the answer back to the browser.",
+    tags: ["GO", "HTTP/HTTPS", "MCP", "Orchestration"],
     status: "Live",
-    year: "2025",
-      url: "https://twinmind-ai-client-u68m-git-main-ask-elads-projects.vercel.app/",
-    github: "https://github.com/ask-elad/twinmind-ai",
-    image: "/proj/twinmind.png"
+    url: "https://campusbrains.vercel.app/",
+    github: "https://github./-https://github.com/ask-elad/Campus-Intelligence-Dashboard-with-AI-Assistant/server_proxy",
+    year: "2026",
+    image: "/proj/campus.png"
   },
   {
     id: 2,
@@ -61,12 +61,13 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 5,
-    name: "Campus Pulse",
-    description: "A unified campus intelligence dashboard for IIT Roorkee that combines a modern Next.js frontend, an Express-based orchestrator, and independent MCP servers for library, cafeteria, events, and academics. The AI assistant routes user questions to the right campus source in real time and streams the answer back to the browser.",
-    tags: ["GO", "HTTP/HTTPS", "CLI"],
-    status: "Building",
-    github: "https://github./-https://github.com/ask-elad/Campus-Intelligence-Dashboard-with-AI-Assistant/server_proxy",
-    year: "2026",
-    image: "/proj/campus.png"
+    name: "TwinMind AI",
+    description: "A real-time AI meeting copilot that listens to live audio, transcribes speech via Whisper, and continuously surfaces three contextual suggestions based on what is being said. Clicking a suggestion opens a detailed answer in a streaming chat panel.",
+    tags: ["React", "Node", "LLM"],
+    status: "Live",
+    year: "2025",
+    url: "https://twinmind-ai-client-u68m-git-main-ask-elads-projects.vercel.app/",
+    github: "https://github.com/ask-elad/twinmind-ai",
+    image: "/proj/twinmind.png"
   },
 ];
