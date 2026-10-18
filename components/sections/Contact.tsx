@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { CONFIG } from '@/lib/data/config';
 import { SoundType } from '@/hooks/useSound';
 import { T } from '@/lib/tokens';
@@ -9,11 +10,21 @@ const LINKS = [
   { label: 'twitter',  handle: () => '@' + (CONFIG.social.twitter.split('/').filter(Boolean).pop() ?? ''),         logo: '/logos/twitter',  href: () => CONFIG.social.twitter },
 ];
 
-// Try .jpg first; swap to .png on error so either file works.
-function swapExt(e: React.SyntheticEvent<HTMLImageElement>) {
-  const img = e.currentTarget;
-  if (img.src.endsWith('.jpg')) img.src = img.src.replace(/\.jpg$/, '.png');
-  else img.style.display = 'none';
+// Walks through candidate extensions until one loads. Resilient to the
+// browser caching a 404 or React dropping the onError on hydration.
+const EXT_ORDER = ['png', 'jpg', 'jpeg', 'svg', 'webp'];
+function SocialIcon({ base }: { base: string }) {
+  const [i, setI] = useState(0);
+  if (i >= EXT_ORDER.length) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`${base}.${EXT_ORDER[i]}`}
+      alt=""
+      onError={() => setI(n => n + 1)}
+      style={{ width: 20, height: 20, objectFit: 'contain', borderRadius: 2 }}
+    />
+  );
 }
 
 export function Contact({ playSound }: { playSound: (t: SoundType) => void }) {
@@ -63,8 +74,7 @@ export function Contact({ playSound }: { playSound: (t: SoundType) => void }) {
               if (handle) handle.style.color = T.t3;
             }}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '10px 14px 10px 12px', border: `1px solid ${T.line}`, borderRadius: 2, background: T.ink, textDecoration: 'none', fontFamily: T.fMono, fontSize: 13, transition: 'border-color .2s, background .2s, transform .2s, box-shadow .2s' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={l.logo + '.jpg'} onError={swapExt} alt="" style={{ width: 20, height: 20, objectFit: 'contain', borderRadius: 2 }} />
+            <SocialIcon base={l.logo} />
             <span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.1 }}>
               <span style={{ color: T.t5, fontSize: 10, letterSpacing: '.08em' }}>{l.label}</span>
               <span data-handle style={{ color: T.t3, fontSize: 13, transition: 'color .2s' }}>{l.handle()}</span>

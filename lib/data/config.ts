@@ -7,7 +7,7 @@
 export const CONFIG = {
 
   // ── WHO YOU ARE ───────────────────────────────────────────────────────────
-  name:     "ARYAN RAI",
+  name:     "Aryan Rai",
   alias:    "askelad",
   location: "ROORKEE, INDIA",
   email:    "aryanrai746@gmail.com",

@@ -51,8 +51,9 @@ export function Navbar({ onCmd, playSound }: Props) {
       router.push(link.page);
     } else if (link.section) {
       if (window.location.pathname !== '/') {
-        router.push('/');
-        setTimeout(() => document.getElementById(link.section!)?.scrollIntoView({ behavior: 'auto' }), 300);
+        // Full nav straight to the anchor — the browser places us at the
+        // section before paint, so there's no flash of the hero first.
+        window.location.href = '/#' + link.section;
       } else {
         document.getElementById(link.section!)?.scrollIntoView({ behavior: 'auto' });
       }
