@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import { PROJECTS } from '@/lib/data/projects';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { SoundType } from '@/hooks/useSound';
@@ -63,12 +64,12 @@ export function Projects({ playSound }: { playSound: (t: SoundType) => void }) {
       {featured && (
         <article style={{ marginBottom: 64 }}>
           {featured.image ? (
-            <div style={{ overflow: 'hidden', borderRadius: 6, marginBottom: 24, border: `1px solid ${T.line}` }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={featured.image} alt={featured.name} style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', transition: 'transform .6s ease' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.02)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }}
-              />
+            <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 6, marginBottom: 24, border: `1px solid ${T.line}`, aspectRatio: '16/9' }}
+              onMouseEnter={e => { const i = e.currentTarget.querySelector('img'); if (i) i.style.transform = 'scale(1.02)'; }}
+              onMouseLeave={e => { const i = e.currentTarget.querySelector('img'); if (i) i.style.transform = 'scale(1)'; }}
+            >
+              <Image src={featured.image} alt={featured.name} fill priority sizes="(max-width: 900px) 100vw, 900px"
+                style={{ objectFit: 'cover', transition: 'transform .6s ease' }} />
             </div>
           ) : (
             <div style={{ width: '100%', aspectRatio: '16/7', borderRadius: 6, marginBottom: 24, border: `1px dashed ${T.t6}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.t5, fontFamily: T.fMono, fontSize: 11 }}>
@@ -100,11 +101,12 @@ export function Projects({ playSound }: { playSound: (t: SoundType) => void }) {
             onMouseEnter={() => playSound('hover')}
             style={{ display: 'flex', flexDirection: 'column' }}>
             {p.image && (
-              <div style={{ overflow: 'hidden', borderRadius: 4, marginBottom: 18, border: `1px solid ${T.line}` }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.image} alt={p.name} style={{ width: '100%', aspectRatio: '16/10', objectFit: 'cover', transition: 'transform .5s ease' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.03)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }} />
+              <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 4, marginBottom: 18, border: `1px solid ${T.line}`, aspectRatio: '16/10' }}
+                onMouseEnter={e => { const i = e.currentTarget.querySelector('img'); if (i) i.style.transform = 'scale(1.03)'; }}
+                onMouseLeave={e => { const i = e.currentTarget.querySelector('img'); if (i) i.style.transform = 'scale(1)'; }}
+              >
+                <Image src={p.image} alt={p.name} fill sizes="(max-width: 700px) 100vw, 400px"
+                  style={{ objectFit: 'cover', transition: 'transform .5s ease' }} />
               </div>
             )}
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8, gap: 12 }}>

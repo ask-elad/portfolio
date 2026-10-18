@@ -127,7 +127,7 @@
       "handle": "hit"
     },
     {
-      "src": "/_next/static/(?:[^/]+/pages|pages|chunks|runtime|css|image|media|SwpZguVXEqcR2NvxqQXSC)/.+",
+      "src": "/_next/static/(?:[^/]+/pages|pages|chunks|runtime|css|image|media|h3L4iKT3E8HQiRd\\-0yPvr)/.+",
       "headers": {
         "cache-control": "public,max-age=31536000,immutable"
       },
@@ -156,18 +156,12 @@
     {
       "src": "/.*",
       "dest": "/404",
-      "status": 404,
-      "headers": {
-        "x-next-error-status": "404"
-      }
+      "status": 404
     },
     {
       "src": "/.*",
       "dest": "/500",
-      "status": 500,
-      "headers": {
-        "x-next-error-status": "500"
-      }
+      "status": 500
     }
   ],
   "images": {
@@ -229,7 +223,6 @@
     }
   },
   "framework": {
-    "slug": "nextjs",
     "version": "15.5.7"
   },
   "crons": []

@@ -77,7 +77,9 @@ export function Experience() {
                   <img
                     src={e.logo}
                     alt={`${e.company} logo`}
-                    style={{ width: '70%', height: '70%', objectFit: 'contain' }}
+                    style={{ width: '70%', height: '70%', objectFit: 'contain', filter: 'grayscale(1)', opacity: 0.75, transition: 'filter .25s ease, opacity .25s ease' }}
+                    onMouseEnter={(ev) => { ev.currentTarget.style.filter = 'grayscale(0)'; ev.currentTarget.style.opacity = '1'; }}
+                    onMouseLeave={(ev) => { ev.currentTarget.style.filter = 'grayscale(1)'; ev.currentTarget.style.opacity = '0.75'; }}
                   />
                 ) : (
                   e.company.slice(0, 2).toUpperCase()

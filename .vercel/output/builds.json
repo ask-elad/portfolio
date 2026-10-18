@@ -3,14 +3,13 @@
   "target": "preview",
   "argv": [
     "/home/askeladd/.local/share/fnm/node-versions/v22.22.3/installation/bin/node",
-    "/home/askeladd/.npm/_npx/69f9afb961c37556/node_modules/.bin/vc",
+    "/home/askeladd/.npm/_npx/f1d35740ce80dc50/node_modules/.bin/vercel",
     "build"
   ],
-  "cliVersion": "54.20.1",
   "builds": [
     {
       "require": "@vercel/next",
-      "requirePath": "/home/askeladd/.npm/_npx/69f9afb961c37556/node_modules/@vercel/next/dist/index",
+      "requirePath": "/home/askeladd/.npm/_npx/f1d35740ce80dc50/node_modules/@vercel/next/dist/index",
       "apiVersion": 2,
       "src": "package.json",
       "use": "@vercel/next",

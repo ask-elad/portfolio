@@ -34,6 +34,8 @@ const EASTER_TRIGGERS = ['vinland', 'askeladd', 'vinland saga'];
 export function CommandPalette({ open, onClose, onSelect, onVinland }: Props) {
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<Element | null>(null);
   const firedRef = useRef(false);
 
   // Keep latest callbacks in refs so the trigger effect below never needs
@@ -42,7 +44,17 @@ export function CommandPalette({ open, onClose, onSelect, onVinland }: Props) {
   const onCloseRef = useRef(onClose);
   useEffect(() => { onVinlandRef.current = onVinland; onCloseRef.current = onClose; }, [onVinland, onClose]);
 
-  useEffect(() => { if (open) { setQuery(''); firedRef.current = false; setTimeout(() => inputRef.current?.focus(), 10); } }, [open]);
+  useEffect(() => {
+    if (open) {
+      triggerRef.current = document.activeElement;
+      setQuery('');
+      firedRef.current = false;
+      setTimeout(() => inputRef.current?.focus(), 10);
+    } else if (triggerRef.current instanceof HTMLElement) {
+      triggerRef.current.focus();
+      triggerRef.current = null;
+    }
+  }, [open]);
 
   // Only depends on `query` itself — onVinland/onClose are recreated on every
   // parent render, so including them here was re-firing this effect (and the
@@ -61,6 +73,17 @@ export function CommandPalette({ open, onClose, onSelect, onVinland }: Props) {
     const h = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); onClose(); }
       if (e.key === 'Escape') onClose();
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button, input, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        if (e.shiftKey && active === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && active === last) { e.preventDefault(); first.focus(); }
+      }
     };
     if (open) window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
@@ -78,7 +101,7 @@ export function CommandPalette({ open, onClose, onSelect, onVinland }: Props) {
 
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', zIndex: 1000, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: '13vh' }}>
-      <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: 540, background: '#0a0a0c', border: '1px solid rgba(34,211,238,.2)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 0 80px rgba(34,211,238,.04), 0 30px 70px rgba(0,0,0,.95)' }}>
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Command palette" onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: 540, background: '#0a0a0c', border: '1px solid rgba(34,211,238,.2)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 0 80px rgba(34,211,238,.04), 0 30px 70px rgba(0,0,0,.95)' }}>
         {/* Input */}
         <div style={{ display: 'flex', alignItems: 'center', padding: '13px 16px', borderBottom: '1px solid #1c1c20', gap: 10 }}>
           <span style={{ color: '#22d3ee', fontFamily: 'monospace', fontSize: 14 }}>⌘</span>
