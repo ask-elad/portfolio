@@ -6,3 +6,4 @@ node_modules/
 .env.*.local
 out/
 npm-debug.log*
+*.tsbuildinfo

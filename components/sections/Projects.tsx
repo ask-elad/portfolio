@@ -2,17 +2,15 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { PROJECTS } from '@/lib/data/projects';
-import { SectionLabel } from '@/components/ui/SectionLabel';
 import { SoundType } from '@/hooks/useSound';
 import { T } from '@/lib/tokens';
 
-const STATUS_COLOR: Record<string, string> = { Live: T.accent, Building: '#fbbf24', Archived: T.t4 };
+const STATUS_COLOR: Record<string, string> = { Live: T.accent, Building: T.warm, Archived: T.t4 };
 
 function StatusDot({ status }: { status: string }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, color: STATUS_COLOR[status] || T.t4, fontFamily: T.fMono, fontSize: 11, letterSpacing: '.12em', textTransform: 'uppercase' }}>
-      <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'currentColor', boxShadow: status === 'Live' ? '0 0 6px currentColor' : 'none' }} />
-      {status}
+    <span style={{ color: STATUS_COLOR[status] || T.t4, fontFamily: T.fMono, fontSize: 11, letterSpacing: '.08em' }}>
+      {status.toLowerCase()}
     </span>
   );
 }
@@ -48,12 +46,14 @@ export function Projects({ playSound }: { playSound: (t: SoundType) => void }) {
 
   return (
     <section id="projects" style={{ padding: '120px 40px', maxWidth: T.col, margin: '0 auto' }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 36, flexWrap: 'wrap', gap: 16 }}>
-        <SectionLabel>Selected work</SectionLabel>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 36 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
+        <h2 style={{ fontFamily: T.fSerif, fontWeight: 400, fontSize: 'clamp(32px,4vw,44px)', color: T.t1, letterSpacing: '-.015em', lineHeight: 1.05 }}>
+          Selected work.
+        </h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
           {allTags.map(t => (
             <button key={t} onClick={() => { setFilter(t); playSound('click'); }} onMouseEnter={() => playSound('hover')}
-              style={{ padding: '4px 10px', borderRadius: 999, border: 'none', background: 'transparent', color: filter === t ? T.accent : T.t4, fontSize: 11, fontFamily: T.fMono, cursor: 'none', letterSpacing: '.04em', transition: 'color .15s' }}>
+              style={{ padding: '4px 10px', borderRadius: 999, border: 'none', background: 'transparent', color: filter === t ? T.accent : T.t4, fontSize: 11, fontFamily: T.fMono, cursor: 'pointer', letterSpacing: '.04em', transition: 'color .15s' }}>
               {filter === t ? '•' : ' '} {t}
             </button>
           ))}
@@ -64,7 +64,7 @@ export function Projects({ playSound }: { playSound: (t: SoundType) => void }) {
       {featured && (
         <article style={{ marginBottom: 64 }}>
           {featured.image ? (
-            <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 6, marginBottom: 24, border: `1px solid ${T.line}`, aspectRatio: '16/9' }}
+            <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 2, marginBottom: 24, border: `1px solid ${T.line}`, aspectRatio: '16/9' }}
               onMouseEnter={e => { const i = e.currentTarget.querySelector('img'); if (i) i.style.transform = 'scale(1.02)'; }}
               onMouseLeave={e => { const i = e.currentTarget.querySelector('img'); if (i) i.style.transform = 'scale(1)'; }}
             >
@@ -72,7 +72,7 @@ export function Projects({ playSound }: { playSound: (t: SoundType) => void }) {
                 style={{ objectFit: 'cover', transition: 'transform .6s ease' }} />
             </div>
           ) : (
-            <div style={{ width: '100%', aspectRatio: '16/7', borderRadius: 6, marginBottom: 24, border: `1px dashed ${T.t6}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.t5, fontFamily: T.fMono, fontSize: 11 }}>
+            <div style={{ width: '100%', aspectRatio: '16/7', borderRadius: 2, marginBottom: 24, border: `1px dashed ${T.t6}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.t5, fontFamily: T.fMono, fontSize: 11 }}>
               featured screenshot \u2014 set <code style={{ marginLeft: 6, color: T.t4 }}>image</code> in projects.ts
             </div>
           )}
@@ -101,7 +101,7 @@ export function Projects({ playSound }: { playSound: (t: SoundType) => void }) {
             onMouseEnter={() => playSound('hover')}
             style={{ display: 'flex', flexDirection: 'column' }}>
             {p.image && (
-              <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 4, marginBottom: 18, border: `1px solid ${T.line}`, aspectRatio: '16/10' }}
+              <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 2, marginBottom: 18, border: `1px solid ${T.line}`, aspectRatio: '16/10' }}
                 onMouseEnter={e => { const i = e.currentTarget.querySelector('img'); if (i) i.style.transform = 'scale(1.03)'; }}
                 onMouseLeave={e => { const i = e.currentTarget.querySelector('img'); if (i) i.style.transform = 'scale(1)'; }}
               >

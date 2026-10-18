@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSound }  from '@/hooks/useSound';
-import { Cursor }    from '@/components/features/Cursor';
 import { CommandPalette, Command } from '@/components/features/CommandPalette';
 import { VinlandEasterEgg }       from '@/components/features/VinlandEasterEgg';
 import { Navbar }    from '@/components/layout/Navbar';
@@ -51,7 +50,6 @@ export default function HomeClient() {
 
   return (
     <div style={{ background: T.bg, minHeight: '100vh', color: T.t1, fontFamily: T.fSans }}>
-      <Cursor />
       {vinland && <VinlandEasterEgg onClose={() => setVinland(false)} />}
       <CommandPalette
         open={cmdOpen}

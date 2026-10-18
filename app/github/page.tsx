@@ -5,7 +5,7 @@ import { CONFIG } from '@/lib/data/config';
 import { T } from '@/lib/tokens';
 import { fetchCached, getCached } from '@/lib/dataCache';
 
-const COLORS = ['#0e0e10','#0c4a6e','#0369a1','#0ea5e9','#22d3ee'];
+const COLORS = ['#0e0e10','#3a2317','#6b3a1f','#a35535','#4ade80'];
 
 function HeatMap({ weeks }: { weeks: { level: 0|1|2|3|4; date?: string; count?: number }[][] }) {
   return (
@@ -123,7 +123,7 @@ export default function GitHubPage() {
                         onClick={() => playSound('click')}
                         onMouseEnter={e => { const h = e.currentTarget.querySelector('h3') as HTMLElement | null; if (h) h.style.color = T.accent; playSound('hover'); }}
                         onMouseLeave={e => { const h = e.currentTarget.querySelector('h3') as HTMLElement | null; if (h) h.style.color = T.t1; }}
-                        style={{ padding: '28px 0', borderTop: `1px solid ${T.line}`, borderBottom: i === pinnedRepos.length - 1 ? `1px solid ${T.line}` : 'none', textDecoration: 'none', display: 'grid', gridTemplateColumns: '1fr auto', gap: 20, alignItems: 'baseline', cursor: 'none' }}>
+                        style={{ padding: '28px 0', borderTop: `1px solid ${T.line}`, borderBottom: i === pinnedRepos.length - 1 ? `1px solid ${T.line}` : 'none', textDecoration: 'none', display: 'grid', gridTemplateColumns: '1fr auto', gap: 20, alignItems: 'baseline', cursor: 'pointer' }}>
                         <div>
                           <h3 style={{ fontFamily: T.fSerif, fontWeight: 400, fontSize: 24, color: T.t1, letterSpacing: '-.01em', lineHeight: 1.2, marginBottom: 8, transition: 'color .15s' }}>
                             {r.name}

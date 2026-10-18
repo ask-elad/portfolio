@@ -23,7 +23,7 @@ export function Footer() {
           {'\u00a9'} {new Date().getFullYear()} {name}
         </span>
         <span style={{ color: T.t4, fontSize: 11, fontFamily: T.fMono, letterSpacing: '.08em', display: 'inline-flex', gap: 8, alignItems: 'center' }}>
-          <a href="/now" style={{ color: 'inherit', textDecoration: 'none', borderBottom: `1px dashed ${T.line}` }}>/now</a>
+          <a href="/now" style={{ color: 'inherit', textDecoration: 'none', borderBottom: `1px solid ${T.t6}` }}>/now</a>
           {'\u00b7'} {CONFIG.location} {'\u00b7'} press {'\u2318'} K
         </span>
       </div>

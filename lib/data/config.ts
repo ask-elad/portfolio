@@ -33,7 +33,7 @@ export const CONFIG = {
     facts: [
     //  { label: "Currently",     value: "REPLACE_ME: What you're building" },
       { label: "Studied at",    value: "IIT Roorkee" },
-      { label: "Interested in", value: "Technical interests" },
+      { label: "Interested in", value: "Artificial Intelligence" },
       { label: "Based in",      value: "Roorkee"},
       { label: "Open to",       value: "Full-time \u00b7 Internship \u00b7 Freelance" },
     ],

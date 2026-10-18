@@ -63,12 +63,12 @@ function DifficultyBar({ e, m, h }: { e: number; m: number; h: number }) {
   return (
     <div>
       <div style={{ display: 'flex', height: 6, borderRadius: 3, overflow: 'hidden', background: T.line }}>
-        <div style={{ width: `${(e / total) * 100}%`, background: '#22d3ee' }} />
+        <div style={{ width: `${(e / total) * 100}%`, background: '#4ade80' }} />
         <div style={{ width: `${(m / total) * 100}%`, background: '#f59e0b' }} />
         <div style={{ width: `${(h / total) * 100}%`, background: '#ef4444' }} />
       </div>
       <div style={{ display: 'flex', gap: 20, marginTop: 12, color: T.t4, fontFamily: T.fMono, fontSize: 11, letterSpacing: '.04em' }}>
-        <span><span style={{ color: '#22d3ee' }}>{e}</span> easy</span>
+        <span><span style={{ color: '#4ade80' }}>{e}</span> easy</span>
         <span><span style={{ color: '#f59e0b' }}>{m}</span> medium</span>
         <span><span style={{ color: '#ef4444' }}>{h}</span> hard</span>
       </div>

@@ -24,7 +24,7 @@ export default async function OG() {
           fontFamily: 'sans-serif',
         }}
       >
-        <div style={{ display: 'flex', fontSize: 24, color: '#22d3ee', letterSpacing: 4 }}>
+        <div style={{ display: 'flex', fontSize: 24, color: '#4ade80', letterSpacing: 4 }}>
           {CONFIG.alias?.toUpperCase() ?? name.toUpperCase()}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -33,7 +33,7 @@ export default async function OG() {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 20, color: '#737373' }}>
           <span>{CONFIG.location}</span>
-          <span style={{ color: '#22d3ee' }}>// portfolio</span>
+          <span style={{ color: '#4ade80' }}>// portfolio</span>
         </div>
       </div>
     ),

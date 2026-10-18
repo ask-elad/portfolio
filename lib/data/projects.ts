@@ -20,7 +20,7 @@ export const PROJECTS: Project[] = [
     id: 1,
     name: "Campus Brain",
     description: "A unified campus intelligence dashboard for IIT Roorkee that combines a modern Next.js frontend, an Express-based orchestrator, and independent MCP servers for library, cafeteria, events, and academics. The AI assistant routes user questions to the right campus source in real time and streams the answer back to the browser.",
-    tags: ["GO", "HTTP/HTTPS", "MCP", "Orchestration"],
+    tags: ["MCP", "Orchestration"],
     status: "Live",
     url: "https://campusbrains.vercel.app/",
     github: "https://github./-https://github.com/ask-elad/Campus-Intelligence-Dashboard-with-AI-Assistant/server_proxy",

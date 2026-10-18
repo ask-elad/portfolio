@@ -118,38 +118,38 @@ export function VinlandEasterEgg({ onClose }: { onClose: () => void }) {
             style={{ display: 'block', margin: '0 auto 44px', opacity: contentVisible ? 1 : 0, transition: 'opacity 0.5s' }}>
 
             {/* Outer ring — circumference ~553 */}
-            <circle cx="100" cy="100" r="88" fill="none" stroke="#22d3ee" strokeWidth="0.8"
+            <circle cx="100" cy="100" r="88" fill="none" stroke="#4ade80" strokeWidth="0.8"
               strokeDasharray="553" strokeDashoffset="553"
               style={{ animation: animate('0s','0.9s') }} />
 
             {/* N-S spoke — length 176 */}
-            <line x1="100" y1="12" x2="100" y2="188" stroke="#22d3ee" strokeWidth="0.6"
+            <line x1="100" y1="12" x2="100" y2="188" stroke="#4ade80" strokeWidth="0.6"
               strokeDasharray="176" strokeDashoffset="176"
               style={{ animation: animate('0.95s','0.45s') }} />
             {/* E-W spoke */}
-            <line x1="12" y1="100" x2="188" y2="100" stroke="#22d3ee" strokeWidth="0.6"
+            <line x1="12" y1="100" x2="188" y2="100" stroke="#4ade80" strokeWidth="0.6"
               strokeDasharray="176" strokeDashoffset="176"
               style={{ animation: animate('0.95s','0.45s') }} />
             {/* NW-SE diagonal — length ~249 */}
-            <line x1="38" y1="38" x2="162" y2="162" stroke="#22d3ee" strokeWidth="0.5"
+            <line x1="38" y1="38" x2="162" y2="162" stroke="#4ade80" strokeWidth="0.5"
               strokeDasharray="249" strokeDashoffset="249"
               style={{ animation: animate('1.2s','0.4s') }} />
             {/* NE-SW diagonal */}
-            <line x1="162" y1="38" x2="38" y2="162" stroke="#22d3ee" strokeWidth="0.5"
+            <line x1="162" y1="38" x2="38" y2="162" stroke="#4ade80" strokeWidth="0.5"
               strokeDasharray="249" strokeDashoffset="249"
               style={{ animation: animate('1.2s','0.4s') }} />
             {/* Inner ring — circumference ~239 */}
-            <circle cx="100" cy="100" r="38" fill="none" stroke="#22d3ee" strokeWidth="0.7"
+            <circle cx="100" cy="100" r="38" fill="none" stroke="#4ade80" strokeWidth="0.7"
               strokeDasharray="239" strokeDashoffset="239"
               style={{ animation: animate('1.45s','0.55s') }} />
             {/* Cardinal tick marks */}
             {([[100,12,100,4],[188,100,196,100],[100,188,100,196],[12,100,4,100]] as number[][]).map(([x1,y1,x2,y2],i) => (
-              <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#22d3ee" strokeWidth="1"
+              <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#4ade80" strokeWidth="1"
                 strokeDasharray="12" strokeDashoffset="12"
                 style={{ animation: animate(`${1.8 + i*0.04}s`,'0.2s') }} />
             ))}
             {/* Center dot */}
-            <circle cx="100" cy="100" r="3.5" fill="#22d3ee"
+            <circle cx="100" cy="100" r="3.5" fill="#4ade80"
               style={{ opacity: 0, animation: contentVisible ? 'fadeInEl 0.35s 2.0s ease forwards' : 'none' }} />
           </svg>
 
@@ -164,7 +164,7 @@ export function VinlandEasterEgg({ onClose }: { onClose: () => void }) {
               <>
                 &ldquo;{quoteText}
                 {['quote'].includes(phase) && (
-                  <span style={{ animation: 'blinkEl 1s step-end infinite', color: '#22d3ee' }}>█</span>
+                  <span style={{ animation: 'blinkEl 1s step-end infinite', color: '#4ade80' }}>█</span>
                 )}
                 {phase !== 'quote' && <>&rdquo;</>}
               </>
@@ -181,7 +181,7 @@ export function VinlandEasterEgg({ onClose }: { onClose: () => void }) {
 
           {/* Signature */}
           {(phase === 'sig' || phase === 'hold') && (
-            <div style={{ fontFamily: 'monospace', fontSize: 16, color: '#22d3ee', letterSpacing: '.08em' }}>
+            <div style={{ fontFamily: 'monospace', fontSize: 16, color: '#4ade80', letterSpacing: '.08em' }}>
               {sigText}
               <span style={{ animation: 'blinkEl 1s step-end infinite' }}>|</span>
             </div>

@@ -10,18 +10,27 @@ const description = CONFIG.heroTagline?.startsWith('REPLACE')
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
-  title: { default: `${name} — Portfolio`, template: `%s · ${name}` },
+  title: { default: `${name} | Human`, template: `%s · ${name}` },
   description,
   authors: [{ name }],
+  icons: {
+    icon: [
+      { url: '/logos/favicon.svg', type: 'image/svg+xml' },
+      { url: '/logos/favicon.png', type: 'image/png' },
+      { url: '/logos/favicon.ico' },
+    ],
+    shortcut: '/logos/favicon.ico',
+    apple: '/logos/apple-touch-icon.png',
+  },
   openGraph: {
-    title: `${name} — Portfolio`,
+    title: `${name} | Human`,
     description,
     type: 'website',
-    siteName: `${name} — Portfolio`,
+    siteName: `${name} | Human`,
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${name} — Portfolio`,
+    title: `${name} | Human`,
     description,
     creator: CONFIG.social?.twitter?.split('/').pop() ? `@${CONFIG.social.twitter.split('/').pop()}` : undefined,
   },
@@ -34,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>

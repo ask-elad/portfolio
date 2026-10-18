@@ -1,6 +1,5 @@
 'use client';
-import { EXPERIENCE, type ProofOfWork } from '@/lib/data/experience';
-import { SectionLabel } from '@/components/ui/SectionLabel';
+import { EXPERIENCE, isActive, type ProofOfWork } from '@/lib/data/experience';
 import { T } from '@/lib/tokens';
 
 const proofIcon: Record<NonNullable<ProofOfWork['kind']>, string> = {
@@ -16,13 +15,12 @@ const proofIcon: Record<NonNullable<ProofOfWork['kind']>, string> = {
 export function Experience() {
   return (
     <section id="experience" style={{ padding: '96px 40px', maxWidth: 880, margin: '0 auto' }}>
-      <SectionLabel>Experience</SectionLabel>
       <h2
         style={{
           fontFamily: T.font.serif,
           fontSize: 'clamp(32px, 4vw, 44px)',
           lineHeight: 1.05,
-          margin: '12px 0 56px',
+          margin: '0 0 56px',
           letterSpacing: '-0.01em',
         }}
       >
@@ -43,7 +41,11 @@ export function Experience() {
           }}
         />
 
-        {EXPERIENCE.map((e, i) => (
+        {EXPERIENCE.map((e, i) => {
+          const active = isActive(e);
+          const idleBorder = active ? 'rgba(74,222,128,0.28)' : T.color.border;
+          const idleBg = active ? 'rgba(74,222,128,0.04)' : 'rgba(255,255,255,0.015)';
+          return (
           <li
             key={i}
             style={{
@@ -60,7 +62,7 @@ export function Experience() {
                 style={{
                   width: 56,
                   height: 56,
-                  borderRadius: 12,
+                  borderRadius: 2,
                   border: `1px solid ${T.color.border}`,
                   background: T.color.surface ?? '#0f0f0f',
                   display: 'flex',
@@ -77,9 +79,7 @@ export function Experience() {
                   <img
                     src={e.logo}
                     alt={`${e.company} logo`}
-                    style={{ width: '70%', height: '70%', objectFit: 'contain', filter: 'grayscale(1)', opacity: 0.75, transition: 'filter .25s ease, opacity .25s ease' }}
-                    onMouseEnter={(ev) => { ev.currentTarget.style.filter = 'grayscale(0)'; ev.currentTarget.style.opacity = '1'; }}
-                    onMouseLeave={(ev) => { ev.currentTarget.style.filter = 'grayscale(1)'; ev.currentTarget.style.opacity = '0.75'; }}
+                    style={{ width: '70%', height: '70%', objectFit: 'contain' }}
                   />
                 ) : (
                   e.company.slice(0, 2).toUpperCase()
@@ -90,19 +90,20 @@ export function Experience() {
             {/* Body */}
             <article
               style={{
-                border: `1px solid ${T.color.border}`,
-                borderRadius: 14,
+                border: `1px solid ${idleBorder}`,
+                borderRadius: 2,
                 padding: '20px 22px',
-                background: 'rgba(255,255,255,0.015)',
+                background: idleBg,
+                boxShadow: active ? 'inset 2px 0 0 rgba(74,222,128,0.55)' : 'none',
                 transition: 'border-color .2s ease, transform .2s ease, background .2s ease',
               }}
               onMouseEnter={(ev) => {
                 ev.currentTarget.style.borderColor = T.color.accent;
-                ev.currentTarget.style.background = 'rgba(34,211,238,0.03)';
+                ev.currentTarget.style.background = 'rgba(74,222,128,0.06)';
               }}
               onMouseLeave={(ev) => {
-                ev.currentTarget.style.borderColor = T.color.border;
-                ev.currentTarget.style.background = 'rgba(255,255,255,0.015)';
+                ev.currentTarget.style.borderColor = idleBorder;
+                ev.currentTarget.style.background = idleBg;
               }}
             >
               {/* Meta row */}
@@ -110,22 +111,34 @@ export function Experience() {
                 style={{
                   display: 'flex',
                   flexWrap: 'wrap',
-                  gap: 10,
+                  gap: 8,
                   alignItems: 'center',
                   fontFamily: T.font.mono,
-                  fontSize: 11,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
+                  fontSize: 12,
                   color: T.color.muted,
                   marginBottom: 10,
                 }}
               >
+                {active && (
+                  <span
+                    aria-hidden
+                    style={{
+                      display: 'inline-block',
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      background: T.color.accent,
+                      boxShadow: '0 0 8px rgba(74,222,128,0.7)',
+                      animation: 'pulseGlow 2.4s ease-in-out infinite',
+                    }}
+                  />
+                )}
                 <span style={{ color: T.color.accent }}>{e.period}</span>
-                <span style={{ opacity: 0.4 }}>/</span>
+                <span style={{ opacity: 0.4 }}>·</span>
                 <span>{e.type}</span>
                 {e.location && (
                   <>
-                    <span style={{ opacity: 0.4 }}>/</span>
+                    <span style={{ opacity: 0.4 }}>·</span>
                     <span>{e.location}</span>
                   </>
                 )}
@@ -206,9 +219,7 @@ export function Experience() {
                   <div
                     style={{
                       fontFamily: T.font.mono,
-                      fontSize: 10,
-                      letterSpacing: '0.12em',
-                      textTransform: 'uppercase',
+                      fontSize: 11,
                       color: T.color.muted,
                       marginBottom: 8,
                     }}
@@ -263,7 +274,7 @@ export function Experience() {
                     gap: 6,
                     marginTop: 18,
                     paddingTop: 14,
-                    borderTop: `1px dashed ${T.color.border}`,
+                    borderTop: `1px solid ${T.color.border}`,
                   }}
                 >
                   {e.tech.map((t) => (
@@ -272,11 +283,9 @@ export function Experience() {
                       style={{
                         fontFamily: T.font.mono,
                         fontSize: 11,
-                        letterSpacing: '0.06em',
-                        textTransform: 'uppercase',
                         color: T.color.muted,
                         padding: '3px 8px',
-                        borderRadius: 4,
+                        borderRadius: T.radius.sharp,
                         background: 'rgba(255,255,255,0.03)',
                       }}
                     >
@@ -287,7 +296,8 @@ export function Experience() {
               )}
             </article>
           </li>
-        ))}
+          );
+        })}
       </ol>
     </section>
   );

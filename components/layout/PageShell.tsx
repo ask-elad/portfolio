@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSound } from '@/hooks/useSound';
-import { Cursor } from '@/components/features/Cursor';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CommandPalette, Command } from '@/components/features/CommandPalette';
@@ -11,14 +10,14 @@ import { T } from '@/lib/tokens';
 import type { SoundType } from '@/hooks/useSound';
 
 interface Props {
-  eyebrow: string;
+  eyebrow?: string;
   title?: string;
   subtitle?: string;
   maxWidth?: number;
   children: (ctx: { playSound: (t: SoundType) => void }) => React.ReactNode;
 }
 
-export function PageShell({ eyebrow, title, subtitle, maxWidth = T.col, children }: Props) {
+export function PageShell({ title, subtitle, maxWidth = T.col, children }: Props) {
   const playSound = useSound();
   const router = useRouter();
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -40,7 +39,6 @@ export function PageShell({ eyebrow, title, subtitle, maxWidth = T.col, children
 
   return (
     <div style={{ background: T.bg, minHeight: '100vh', color: T.t1, fontFamily: T.fSans, display: 'flex', flexDirection: 'column' }}>
-      <Cursor />
       {vinland && <VinlandEasterEgg onClose={() => setVinland(false)} />}
       <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} onSelect={handleCmd}
         onVinland={() => { setVinland(true); playSound('vinland'); setCmdOpen(false); }} />
@@ -50,13 +48,10 @@ export function PageShell({ eyebrow, title, subtitle, maxWidth = T.col, children
           <button onClick={() => { router.push('/'); playSound('click'); }}
             onMouseEnter={e => { e.currentTarget.style.color = T.accent; playSound('hover'); }}
             onMouseLeave={e => { e.currentTarget.style.color = T.t4; }}
-            style={{ background: 'none', border: 'none', cursor: 'none', color: T.t4, fontFamily: T.fMono, fontSize: 12, marginBottom: 56, display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'color .15s', padding: 0 }}>
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.t4, fontFamily: T.fMono, fontSize: 12, marginBottom: 56, display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'color .15s', padding: 0 }}>
             <span style={{ display: 'inline-block', width: 14, height: 1, background: 'currentColor' }} />
             Back
           </button>
-          <div style={{ color: T.accent, fontFamily: T.fMono, fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: title ? 18 : 40, fontWeight: 500 }}>
-            {eyebrow}
-          </div>
           {title && (
             <h1 style={{ fontFamily: T.fSerif, fontWeight: 400, fontSize: 'clamp(40px,6vw,68px)', color: T.t1, letterSpacing: '-.02em', lineHeight: 1.05, marginBottom: subtitle ? 18 : 40 }}>
               {title}

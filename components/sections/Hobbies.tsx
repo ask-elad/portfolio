@@ -37,7 +37,7 @@ function Tags({ tags }: { tags?: string[] }) {
 function Photo({ src, alt, ratio = '16/10' }: { src?: string; alt: string; ratio?: string }) {
   if (src) {
     return (
-      <div style={{ width: '100%', aspectRatio: ratio, overflow: 'hidden', background: '#050506', borderRadius: 4 }}>
+      <div style={{ width: '100%', aspectRatio: ratio, overflow: 'hidden', background: '#050506', borderRadius: 2 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt={alt} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform .8s ease' }}
           onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.03)'; }}
@@ -47,7 +47,7 @@ function Photo({ src, alt, ratio = '16/10' }: { src?: string; alt: string; ratio
     );
   }
   return (
-    <div style={{ width: '100%', aspectRatio: ratio, borderRadius: 4, border: `1px dashed ${T.t6}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.t6, fontFamily: T.fMono, fontSize: 11, textAlign: 'center', padding: 12 }}>
+    <div style={{ width: '100%', aspectRatio: ratio, borderRadius: 2, border: `1px dashed ${T.t6}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.t6, fontFamily: T.fMono, fontSize: 11, textAlign: 'center', padding: 12 }}>
       add a photo — set <code style={{ marginLeft: 4, color: T.t5 }}>image</code> in hobbies.ts
     </div>
   );

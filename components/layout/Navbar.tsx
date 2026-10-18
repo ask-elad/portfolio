@@ -73,7 +73,7 @@ export function Navbar({ onCmd, playSound }: Props) {
       <div onClick={goHome}
         onMouseEnter={e => { (e.currentTarget.children[0] as HTMLElement).style.color = T.accent; playSound('hover'); }}
         onMouseLeave={e => { (e.currentTarget.children[0] as HTMLElement).style.color = T.t1; }}
-        style={{ justifySelf: 'start', cursor: 'none' }}>
+        style={{ justifySelf: 'start', cursor: 'pointer' }}>
         <span style={{ fontFamily: T.fMono, fontWeight: 600, fontSize: 16, color: T.t1, transition: 'color .15s', letterSpacing: '-.01em', userSelect: 'none' }}>
           {CONFIG.alias}
           <span style={{ opacity: blink ? 1 : 0, color: T.accent, transition: 'opacity .08s' }}>_</span>
@@ -85,7 +85,7 @@ export function Navbar({ onCmd, playSound }: Props) {
           <button key={link.label} onClick={() => go(link)}
             onMouseEnter={e => { e.currentTarget.style.color = T.t1; playSound('hover'); }}
             onMouseLeave={e => { e.currentTarget.style.color = T.t4; }}
-            style={{ background: 'none', border: 'none', cursor: 'none', color: T.t4, fontSize: 13, fontFamily: T.fSans, padding: '6px 12px', whiteSpace: 'nowrap', transition: 'color .15s', letterSpacing: '.01em' }}>
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.t4, fontSize: 13, fontFamily: T.fSans, padding: '6px 12px', whiteSpace: 'nowrap', transition: 'color .15s', letterSpacing: '.01em' }}>
             {link.label}
           </button>
         ))}
@@ -94,7 +94,7 @@ export function Navbar({ onCmd, playSound }: Props) {
       <button onClick={() => { onCmd(); playSound('open'); }}
         onMouseEnter={e => { (e.currentTarget.style as any).borderColor = T.accent + '88'; (e.currentTarget.style as any).color = T.t1; playSound('hover'); }}
         onMouseLeave={e => { (e.currentTarget.style as any).borderColor = T.line; (e.currentTarget.style as any).color = T.t3; }}
-        style={{ justifySelf: 'end', background: T.ink, border: `1px solid ${T.line}`, borderRadius: 6, padding: '6px 11px', color: T.t3, fontSize: 12, fontFamily: T.fMono, cursor: 'none', transition: 'all .2s', letterSpacing: '.04em' }}>
+        style={{ justifySelf: 'end', background: T.ink, border: `1px solid ${T.line}`, borderRadius: 2, padding: '6px 11px', color: T.t3, fontSize: 12, fontFamily: T.fMono, cursor: 'pointer', transition: 'all .2s', letterSpacing: '.04em' }}>
         ⌘ K
       </button>
     </nav>

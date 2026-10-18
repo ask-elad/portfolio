@@ -18,7 +18,41 @@ export interface Experience {
   proofs?: ProofOfWork[];
 }
 
+// Ordered reverse-chronologically by start date (most recent first).
 export const EXPERIENCE: Experience[] = [
+  {
+    role: 'AI Agent Evaluation Engineer',
+    company: 'Handshake AI',
+    companyUrl: 'https://handshake.ai/',
+    logo: '/logos/handshake.png',
+    type: 'Full-time',
+    period: 'Aug 2026 — Present',
+    location: 'Remote',
+    summary: 'Stress-testing autonomous coding agents with repo-level tasks, sandboxed environments, and behavioral verifiers.',
+    bullets: [
+      'Designed repository-level software engineering tasks to stress-test autonomous coding agents across real workflows.',
+      'Built Docker-based environments and behavioral verifiers to evaluate agent-generated code.',
+      'Analyzed execution traces to identify implementation errors, edge-case failures, and reward-hacking behavior.',
+      'Iterated on task specifications, test suites, and evaluation criteria based on agent trial results.',
+    ],
+    tech: ['Python', 'Docker', 'Git', 'Linux', 'Harbor'],
+  },
+  {
+    role: 'Backend AI Intern',
+    company: 'FlyRank',
+    companyUrl: 'https://flyrank.ai/',
+    logo: '/logos/flyrank.png',
+    type: 'Internship',
+    period: 'Jun 2026 — Aug 2026',
+    location: 'Remote',
+    summary: 'Shipping internal AI tooling — CI triage automation and a multi-agent PR review pipeline.',
+    bullets: [
+      'Built an MCP server over the GitHub Actions + Slack APIs that parses failed CI logs, extracts root cause, failing commit, and author, and posts structured triage alerts.',
+      'Designed a multi-agent PR review pipeline: an orchestrator fans each diff out to specialized agents in parallel and aggregates their findings into one review.',
+      'Wired the pipeline into GitHub via webhooks to post inline PR comments, deduplicating overlapping findings across agents.',
+    ],
+    tech: ['Python', 'MCP', 'GitHub Actions', 'Slack API', 'Multi-agent'],
+  },
   {
     role: 'SoK Mentee',
     company: 'KDE',
@@ -40,26 +74,6 @@ export const EXPERIENCE: Experience[] = [
     ],
   },
   {
-    role: 'Backend AI Intern',
-    company: 'FlyRank',
-    companyUrl: 'https://flyrank.ai/',
-    logo: '/logos/flyrank.png',
-    type: 'Internship',
-    period: 'Jun 2026 — Present',
-    location: 'Remote',
-    summary: 'Shipping internal AI tooling — CI triage automation and a multi-agent PR review pipeline.',
-    bullets: [
-      'Built an MCP server over the GitHub Actions + Slack APIs that parses failed CI logs, extracts root cause, failing commit, and author, and posts structured triage alerts.',
-      'Designed a multi-agent PR review pipeline: an orchestrator fans each diff out to specialized agents in parallel and aggregates their findings into one review.',
-      'Wired the pipeline into GitHub via webhooks to post inline PR comments, deduplicating overlapping findings across agents.',
-    ],
-    tech: ['Python', 'MCP', 'GitHub Actions', 'Slack API', 'Multi-agent'],
-    // proofs: [
-    //   { label: 'Final work', url: 'https://mentorship.kde.org', kind: 'design' },
-    //   { label: 'Status Report', url: 'https://community.kde.org/SoK/2026/StatusReport/Aryan_Rai', kind: 'article' },
-    // ],
-  },
-  {
     role: 'Open Source Contributor',
     company: 'Inspektor Gadget',
     companyUrl: 'https://www.inspektor-gadget.io/',
@@ -79,3 +93,6 @@ export const EXPERIENCE: Experience[] = [
     ],
   },
 ];
+
+/** True when the role is still active (period ends in "Present"). */
+export const isActive = (e: Experience) => /present/i.test(e.period);
