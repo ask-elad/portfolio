@@ -38,7 +38,7 @@ export default function HomeClient() {
     if (cmd.page === 'cp')      { router.push('/cp');     return; }
     if (cmd.page === 'now')     { router.push('/now');    return; }
     if (cmd.section) {
-      setTimeout(() => document.getElementById(cmd.section!)?.scrollIntoView({ behavior: 'smooth' }), 50);
+      setTimeout(() => document.getElementById(cmd.section!)?.scrollIntoView({ behavior: 'auto' }), 50);
     }
   }, [playSound, router]);
 

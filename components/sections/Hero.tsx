@@ -11,7 +11,7 @@ export function Hero({ playSound }: { playSound: (t: SoundType) => void }) {
 
   const scroll = (id: string) => {
     playSound('click');
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'auto' });
   };
 
   const currently = CONFIG.about.facts.find(f => f.label === 'Currently')?.value;

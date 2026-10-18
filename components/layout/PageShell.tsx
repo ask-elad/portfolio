@@ -33,7 +33,7 @@ export function PageShell({ title, subtitle, maxWidth = T.col, children }: Props
 
   const handleCmd = useCallback((cmd: Command) => {
     setCmdOpen(false); playSound('click');
-    if (cmd.section) { router.push('/'); setTimeout(() => document.getElementById(cmd.section!)?.scrollIntoView({ behavior: 'smooth' }), 300); }
+    if (cmd.section) { router.push('/'); setTimeout(() => document.getElementById(cmd.section!)?.scrollIntoView({ behavior: 'auto' }), 300); }
     else if (cmd.page) router.push('/' + cmd.page);
   }, [playSound, router]);
 

@@ -52,9 +52,9 @@ export function Navbar({ onCmd, playSound }: Props) {
     } else if (link.section) {
       if (window.location.pathname !== '/') {
         router.push('/');
-        setTimeout(() => document.getElementById(link.section!)?.scrollIntoView({ behavior: 'smooth' }), 300);
+        setTimeout(() => document.getElementById(link.section!)?.scrollIntoView({ behavior: 'auto' }), 300);
       } else {
-        document.getElementById(link.section!)?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById(link.section!)?.scrollIntoView({ behavior: 'auto' });
       }
     }
   };
